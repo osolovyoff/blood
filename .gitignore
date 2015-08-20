@@ -21,8 +21,8 @@ extern/opencv/samples/
 
 
 #__________________________________________PROJECT
-project/cmake/__pycache__/
-project/cmake/cmake.pyc
+project/assemble/__pycache__/
+project/assemble/assemble.pyc
 project/VS2015ARM/
 project/VS2015x64/
 project/VS2015/

@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
-# _________________________________________ Project name
-set(PRODUCT blood)
 project(blood)
-# _________________________________________ Settingso
+# _________________________________________ Project name
+set(PRODUCT test)
+# _________________________________________ Options
 option(BUILD_LIBRARY "Switching between library and executable" OFF)
 option(64-Bit "Build x64 platform" ON)
 option(STORE "Create Windows 8.1 or more; Store application" OFF)
@@ -281,3 +281,6 @@ if(USE_OPENSSL)
 	    target_link_libraries(blood ${OPENSSL_LIBRARIES})
 	endif()
 endif()
+
+# _________________________________________ Template project
+project(blood)
