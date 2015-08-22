@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
-project(blood)
+set(project_name hello)
 # _________________________________________ Project name
-set(PRODUCT test)
+project(blood)
+project(${project_name})
 # _________________________________________ Options
 option(BUILD_LIBRARY "Switching between library and executable" OFF)
 option(64-Bit "Build x64 platform" ON)
@@ -132,7 +133,7 @@ endif()
 if(UNIX)
     #add_definitions(-fpermissive -std=c++11)
 endif()
-# _________________________________________ 
+# _________________________________________ Set library flags
 if(CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_CONFIGURATION_TYPES "DEBUG;RELEASE;")
     set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING "" FORCE)
@@ -154,33 +155,29 @@ if(MSVC)
 endif()
 # _________________________________________ Source code
 set(BLOOD_INCLUDE_DIR "${BLOOD_ROOT}/include/blood/")
-set(BLOOD_SOURCE_DIR  "${BLOOD_ROOT}/source/")
+set(BLOOD_SOURCE_DIR  "${BLOOD_ROOT}/source/engine/")
 
-file(GLOB CODE_COMMON   "${BLOOD_INCLUDE_DIR}common/*.hxx"   "${BLOOD_SOURCE_DIR}engine/common/*.cxx")
-file(GLOB CODE_CHRONO   "${BLOOD_INCLUDE_DIR}chrono/*.hxx"   "${BLOOD_SOURCE_DIR}engine/chrono/*.cxx")
-file(GLOB CODE_CRYPT    "${BLOOD_INCLUDE_DIR}crypt/*.hxx"    "${BLOOD_SOURCE_DIR}engine/crypt/*.cxx")
-file(GLOB CODE_PARSER   "${BLOOD_INCLUDE_DIR}parse/*.hxx"    "${BLOOD_SOURCE_DIR}engine/parse/*.cxx")
-file(GLOB CODE_NET      "${BLOOD_INCLUDE_DIR}net/*.hxx"      "${BLOOD_SOURCE_DIR}engine/net/*.cxx")
-file(GLOB CODE_SYS      "${BLOOD_INCLUDE_DIR}sys/*.hxx"      "${BLOOD_SOURCE_DIR}engine/sys/*.cxx")
-file(GLOB CODE_PATTERN  "${BLOOD_INCLUDE_DIR}pattern/*.hxx"  "${BLOOD_SOURCE_DIR}engine/pattern/*.cxx")
-file(GLOB CODE_VISION   "${BLOOD_INCLUDE_DIR}vision/*.hxx"   "${BLOOD_SOURCE_DIR}engine/vision/*cxx")
-file(GLOB CODE_GRAPHIC "${BLOOD_INCLUDE_DIR}gfx/*.hxx"      "${BLOOD_SOURCE_DIR}engine/gfx/*cxx")
-
-file(GLOB CODE_CODE
-    "${BLOOD_SOURCE_DIR}code/*.h*"
-    "${BLOOD_SOURCE_DIR}code/*.c*"
-)
+file(GLOB CODE_COMMON   "${BLOOD_INCLUDE_DIR}common/*.hxx"   "${BLOOD_SOURCE_DIR}common/*.cxx")
+file(GLOB CODE_CHRONO   "${BLOOD_INCLUDE_DIR}chrono/*.hxx"   "${BLOOD_SOURCE_DIR}chrono/*.cxx")
+file(GLOB CODE_CRYPT    "${BLOOD_INCLUDE_DIR}crypt/*.hxx"    "${BLOOD_SOURCE_DIR}crypt/*.cxx")
+file(GLOB CODE_PARSER   "${BLOOD_INCLUDE_DIR}parse/*.hxx"    "${BLOOD_SOURCE_DIR}parse/*.cxx")
+file(GLOB CODE_NET      "${BLOOD_INCLUDE_DIR}net/*.hxx"      "${BLOOD_SOURCE_DIR}net/*.cxx")
+file(GLOB CODE_TEXT     "${BLOOD_INCLUDE_DIR}text/*.hxx"     "${BLOOD_SOURCE_DIR}text/*.cxx")
+file(GLOB CODE_SYS      "${BLOOD_INCLUDE_DIR}sys/*.hxx"      "${BLOOD_SOURCE_DIR}sys/*.cxx")
+file(GLOB CODE_PATTERN  "${BLOOD_INCLUDE_DIR}pattern/*.hxx"  "${BLOOD_SOURCE_DIR}pattern/*.cxx")
+file(GLOB CODE_VISION   "${BLOOD_INCLUDE_DIR}vision/*.hxx"   "${BLOOD_SOURCE_DIR}vision/*cxx")
+file(GLOB CODE_GRAPHIC  "${BLOOD_INCLUDE_DIR}gfx/*.hxx"       "${BLOOD_SOURCE_DIR}gfx/*cxx")
 
 source_group(common                           FILES ${CODE_COMMON})
 source_group(chrono                           FILES ${CODE_CHRONO})
 source_group(crypt                            FILES ${CODE_CRYPT})
 source_group(parse                            FILES ${CODE_PARSER})
 source_group(network                          FILES ${CODE_NET})
+source_group(text                             FILES ${CODE_TEXT})
 source_group(system                           FILES ${CODE_SYS} )
 source_group(pattern                          FILES ${CODE_PATTERN})
 source_group(vision                           FILES ${CODE_VISION})
 source_group(graphic                          FILES ${CODE_GRAPHIC})
-source_group(""                               FILES ${CODE_CODE})
 
 set(BLOOD_SOURCES_FILES
     ${CODE_COMMON}
@@ -189,15 +186,12 @@ set(BLOOD_SOURCES_FILES
     ${CODE_PARSER}
     ${CODE_GRAPHICS}
     ${CODE_NET}
+    ${CODE_TEXT}
     ${CODE_SYS}
     ${CODE_PATTERN}    
     ${CODE_VISION}
 )
-
 # __________________________________________ Include and Link directories
-set(BLOOD_INCLUDES  ${BLOOD_INCLUDE_DIR} ${BLOOD_ROOT}/include/)
-set(BLOOD_LIBRARIES ${BLOOD_LIBRARIES} ${BLOOD_ROOT})
-
 if(USE_CURL)
     set(BLOOD_INCLUDES ${BLOOD_INCLUDES} ${CURL_INCLUDE_DIR})
 endif()
@@ -227,25 +221,21 @@ if(USE_OPENCV)
         set(BLOOD_LIBRARIES ${BLOOD_INTERMEDIATE}/opencv/3rdparty/)
 	endforeach()
 endif()
+# __________________________________________ Build Engine
+add_library(blood STATIC ${BLOOD_SOURCES_FILES})
+# __________________________________________ Build Project
+set(BLOOD_INCLUDES  ${BLOOD_INCLUDE_DIR} ${BLOOD_ROOT}/include/)
+set(BLOOD_LIBRARIES ${BLOOD_LIBRARIES} ${BLOOD_ROOT})
 
 include_directories(${BLOOD_INCLUDES} )
 link_directories(${BLOOD_LIBRARIES})
 
-# __________________________________________ Build Project
-if(BUILD_LIBRARY)
-    message(STATUS "blood compile like library...")
-
-    add_library(blood STATIC
-        ${BLOOD_SOURCES_FILES})
-else()
-    message(STATUS "blood compile like executable...")
-    source_group(root ${BLOOD_SOURCE_DIR}main.cxx)
-    add_executable(blood
-        ${CODE_CODE}
-	    ${BLOOD_SOURCES_FILES})
-endif()
+file(GLOB PROJECT_CODE "${BLOOD_ROOT}/source/code/*.*")
+source_group("" FILES ${PROJECT_CODE})
+add_executable(${project_name} ${PROJECT_CODE})
 # _________________________________________ set libraries
-set_target_properties(blood PROPERTIES LINKER_LANGUAGE C++)
+set_target_properties(blood           PROPERTIES LINKER_LANGUAGE C++)
+set_target_properties(${project_name} PROPERTIES LINKER_LANGUAGE C++)
 
 if(USE_CURL)
     target_link_libraries(blood libcurl)
@@ -281,6 +271,3 @@ if(USE_OPENSSL)
 	    target_link_libraries(blood ${OPENSSL_LIBRARIES})
 	endif()
 endif()
-
-# _________________________________________ Template project
-project(blood)
