@@ -15,7 +15,7 @@ IP::IP(const string& _ip)
 : m_data(0)
 {
     std::vector<std::string> v;
-    blood::fn::splitString(_ip, '.', v);
+    v = blood::fn::text::split_string(_ip, '.');
 
     for (int i = 0; i < 4; ++i)
         m_data += atoi(v[i].c_str()) * (int)pow(256, 3 - i);

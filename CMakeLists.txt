@@ -19,7 +19,7 @@ set(USE_DEFINITION
 )
 # _________________________________________ Directories
 set(BLOOD_ROOT ${CMAKE_HOME_DIRECTORY})
-set(BLOOD_INTERMEDIATE ${BLOOD_ROOT}/build/intermediate/)
+set(BLOOD_INTERMEDIATE ${BLOOD_ROOT}/build/intermediate/)	
 set(PLATFROM_NAME ${CMAKE_SYSTEM_NAME})
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${BLOOD_ROOT}/build/lib/${PLATFORM_NAME})
@@ -162,18 +162,18 @@ file(GLOB CODE_CHRONO   "${BLOOD_INCLUDE_DIR}chrono/*.hxx"   "${BLOOD_SOURCE_DIR
 file(GLOB CODE_CRYPT    "${BLOOD_INCLUDE_DIR}crypt/*.hxx"    "${BLOOD_SOURCE_DIR}crypt/*.cxx")
 file(GLOB CODE_PARSER   "${BLOOD_INCLUDE_DIR}parse/*.hxx"    "${BLOOD_SOURCE_DIR}parse/*.cxx")
 file(GLOB CODE_NET      "${BLOOD_INCLUDE_DIR}net/*.hxx"      "${BLOOD_SOURCE_DIR}net/*.cxx")
-file(GLOB CODE_TEXT     "${BLOOD_INCLUDE_DIR}text/*.hxx"     "${BLOOD_SOURCE_DIR}text/*.cxx")
+file(GLOB CODE_FUNC     "${BLOOD_INCLUDE_DIR}fn/*.hxx"       "${BLOOD_SOURCE_DIR}fn/*.cxx")
 file(GLOB CODE_SYS      "${BLOOD_INCLUDE_DIR}sys/*.hxx"      "${BLOOD_SOURCE_DIR}sys/*.cxx")
 file(GLOB CODE_PATTERN  "${BLOOD_INCLUDE_DIR}pattern/*.hxx"  "${BLOOD_SOURCE_DIR}pattern/*.cxx")
 file(GLOB CODE_VISION   "${BLOOD_INCLUDE_DIR}vision/*.hxx"   "${BLOOD_SOURCE_DIR}vision/*cxx")
-file(GLOB CODE_GRAPHIC  "${BLOOD_INCLUDE_DIR}gfx/*.hxx"       "${BLOOD_SOURCE_DIR}gfx/*cxx")
+file(GLOB CODE_GRAPHIC  "${BLOOD_INCLUDE_DIR}gfx/*.hxx"      "${BLOOD_SOURCE_DIR}gfx/*cxx")
 
 source_group(common                           FILES ${CODE_COMMON})
 source_group(chrono                           FILES ${CODE_CHRONO})
 source_group(crypt                            FILES ${CODE_CRYPT})
 source_group(parse                            FILES ${CODE_PARSER})
 source_group(network                          FILES ${CODE_NET})
-source_group(text                             FILES ${CODE_TEXT})
+source_group(fn                               FILES ${CODE_FUNC})
 source_group(system                           FILES ${CODE_SYS} )
 source_group(pattern                          FILES ${CODE_PATTERN})
 source_group(vision                           FILES ${CODE_VISION})
@@ -186,7 +186,7 @@ set(BLOOD_SOURCES_FILES
     ${CODE_PARSER}
     ${CODE_GRAPHICS}
     ${CODE_NET}
-    ${CODE_TEXT}
+    ${CODE_FUNC}
     ${CODE_SYS}
     ${CODE_PATTERN}    
     ${CODE_VISION}
@@ -236,24 +236,25 @@ add_executable(${project_name} ${PROJECT_CODE})
 # _________________________________________ set libraries
 set_target_properties(blood           PROPERTIES LINKER_LANGUAGE C++)
 set_target_properties(${project_name} PROPERTIES LINKER_LANGUAGE C++)
+target_link_libraries(${project_name} blood)
 
 if(USE_CURL)
-    target_link_libraries(blood libcurl)
+    target_link_libraries(${project_name} libcurl)
 endif()
 if(USE_OCULUS)
-    target_link_libraries(blood oculus)
+    target_link_libraries(${project_name} oculus)
 endif()
 if(USE_SDL2)
-    target_link_libraries(blood sdl2)	
+    target_link_libraries(${project_name} sdl2)	
 endif()
 
 if(USE_BOOST)
-    target_link_libraries(blood ${BOOST_LIBRARIES})
+    target_link_libraries(${project_name} ${BOOST_LIBRARIES})
 endif()
 if(USE_OPENCV)
-    target_link_libraries(blood IlmImf libjasper libjpeg libpng libtiff libwebp zlib)
-    target_link_libraries(blood comctl32 comdlg32 gdi32 vfw32 user32 oleaut32)
-    target_link_libraries(blood opencv_calib3d opencv_core opencv_features2d opencv_flann opencv_hal
+    target_link_libraries(${project_name} IlmImf libjasper libjpeg libpng libtiff libwebp zlib)
+    target_link_libraries(${project_name} comctl32 comdlg32 gdi32 vfw32 user32 oleaut32)
+    target_link_libraries(${project_name} opencv_calib3d opencv_core opencv_features2d opencv_flann opencv_hal
                                 opencv_highgui opencv_imgcodecs opencv_imgproc opencv_ts opencv_shape
                                 opencv_photo opencv_ml opencv_stitching opencv_superres opencv_video
                                 opencv_videoio opencv_videostab opencv_objdetect)
@@ -264,10 +265,10 @@ if(USE_OPENSSL)
 	    set(LIB_TO_LINK
 	    	Shell32 Advapi32 ws2_32 wldap32 winmm mswsock
 	    	user32 gdi32 imm32 ole32 oleaut32 uuid version)
-	    target_link_libraries(blood ${LIB_TO_LINK})
-        target_link_libraries(blood ${OPENSSL_LIBRARIES})
+	    target_link_libraries(${project_name} ${LIB_TO_LINK})
+        target_link_libraries(${project_name} ${OPENSSL_LIBRARIES})
 	elseif(UNIX)
-        target_link_libraries(blood crypto)
-	    target_link_libraries(blood ${OPENSSL_LIBRARIES})
+        target_link_libraries(${project_name} crypto)
+	    target_link_libraries(${project_name} ${OPENSSL_LIBRARIES})
 	endif()
 endif()
