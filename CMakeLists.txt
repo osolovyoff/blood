@@ -225,16 +225,17 @@ add_library(blood STATIC ${BLOOD_SOURCES_FILES})
 # __________________________________________ Build Project
 set(BLOOD_LIBRARIES ${BLOOD_LIBRARIES} ${BLOOD_ROOT})
 
-include_directories(${BLOOD_INCLUDE_DIR})
+include_directories(${BLOOD_ROOT}/include/)
 link_directories(${BLOOD_LIBRARIES})
 
 file(GLOB PROJECT_CODE "${BLOOD_ROOT}/source/code/*.*")
 source_group("" FILES ${PROJECT_CODE})
 add_executable(${project_name} ${PROJECT_CODE})
-# _________________________________________ set libraries
-set_target_properties(blood           PROPERTIES LINKER_LANGUAGE C++)
+
 set_target_properties(${project_name} PROPERTIES LINKER_LANGUAGE C++)
 target_link_libraries(${project_name} blood)
+# _________________________________________ set libraries
+set_target_properties(blood           PROPERTIES LINKER_LANGUAGE C++)
 
 if(USE_CURL)
     target_link_libraries(${project_name} libcurl)

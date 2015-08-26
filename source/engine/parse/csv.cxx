@@ -1,5 +1,5 @@
-#include <parse/csv.hxx>
-#include <common/encoding.hxx>
+#include "../../../include/blood/parse/csv.hxx"
+#include "../../../include/blood/common/encoding.hxx"
 
 #include <fstream>
 #include <sstream>

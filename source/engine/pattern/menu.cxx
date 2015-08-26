@@ -1,5 +1,5 @@
-#include "pattern/menu.hxx"
-#include "common/input.hxx"
+#include "../../../include/blood/pattern/menu.hxx"
+#include "../../../include/blood/common/input.hxx"
 
 #if defined(BLOOD_32) || defined(BLOOD_VS)
 #include <conio.h>

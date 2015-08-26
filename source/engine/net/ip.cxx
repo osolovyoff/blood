@@ -1,5 +1,5 @@
-#include "net/ip.hxx"
-#include "common/encoding.hxx"
+#include "../../../include/blood/net/ip.hxx"
+#include "../../../include/blood/common/encoding.hxx"
 
 #include <vector>
 

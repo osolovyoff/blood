@@ -1,7 +1,7 @@
 #pragma once
 
-#include "sys/sysinfo_win.hxx"
-#include "sys/sysinfo_nix.hxx"
+#include "../../../include/blood/sys/sysinfo_win.hxx"
+#include "../../../include/blood/sys/sysinfo_nix.hxx"
 
 class SystemInfo: public SystemInfoWin, public SystemInfoNix
 {

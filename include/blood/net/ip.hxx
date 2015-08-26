@@ -2,7 +2,7 @@
 #include <string>
 #include <array>
 
-#include "net/mask.hxx"
+#include "../../../include/blood/net/mask.hxx"
 
 namespace blood { namespace net {
 

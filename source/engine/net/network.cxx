@@ -1,9 +1,7 @@
-#include "net/network.hxx"
-#include "common/encoding.hxx"
+#include "../../../include/blood/net/network.hxx"
+#include "../../../include/blood/common/encoding.hxx"
 #include <iostream>
 #include <algorithm>
-
-#include <blood>
 
 namespace blood { namespace net {
 

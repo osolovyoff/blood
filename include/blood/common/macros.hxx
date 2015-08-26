@@ -5,7 +5,12 @@
 #define blood_is_not_null(x) != 0
 #define blood_return_if(x) if (x) {return;}
 
-#define blood_folder_separtor (BLOOD_VS || BLOOD_32 ? '\\': '/' )
+#if defined(BLOOD_VS) || defined(BLOOD_32)
+#define blood_folder_separtor '\\'       
+#else
+#define blood_folder_separtor '/'       
+#endif
+
 #define blood_filename (strrchr(__FILE__, blood_folder_separator) ? strrchr(__FILE__, blood_folder_separator) + 1 : __FILE__)
 
 

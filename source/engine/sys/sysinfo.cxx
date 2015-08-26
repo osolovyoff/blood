@@ -1,4 +1,4 @@
-#include "sys/sysinfo.hxx"
+#include "../../../include/blood/sys/sysinfo.hxx"
 #include <thread>
 
 unsigned int SystemInfo::getHardwareConcurrency()

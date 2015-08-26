@@ -1,8 +1,7 @@
 #if defined(BLOOD_32) || defined(BLOOD_VS)
-#include "blood/sys/console_win.hxx"
+#include "../../../include/blood/sys/console_win.hxx"
 
 #pragma comment(lib, "Shell32.lib")
-#include <blood>
 #include <iostream>
 #include <Windows.h>
 

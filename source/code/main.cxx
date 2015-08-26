@@ -5,7 +5,14 @@
 
 int main()
 {
-    
     std::cout << "hello world" << blood_folder_separtor << std::endl;
+    std::cout << "hello world" << blood_folder_separtor << std::endl;
+    std::cout << "hello world" << blood_folder_separtor << std::endl;
+    std::cout << "hello world" << blood_folder_separtor << std::endl;
+    std::cout << "hello world" << blood_folder_separtor << std::endl;
+    std::cout << "hello world" << blood_folder_separtor << std::endl;
+    std::cout << "hello world" << blood_folder_separtor << std::endl;
+    std::cout << "hello world" << blood_folder_separtor << std::endl;
+    std::cin.get();
 	return 0;
 }

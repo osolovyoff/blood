@@ -1,5 +1,5 @@
 #if defined(BLOOD_32) || defined(BLOOD_VS)
-#include "sys/sysinfo_win.hxx"
+#include "../../../include/blood/sys/sysinfo_win.hxx"
 #include <Windows.h>
 #include <Userenv.h>
 #include <direct.h>
