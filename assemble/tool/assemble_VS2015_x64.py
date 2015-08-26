@@ -1,7 +1,7 @@
 import cmake
 
 cmake.buildCmake(
-    'CodeBlockUnixMake',
+    'VS2015x64',
     '../../',
-    '../../project/'
+    '../../assemble/'
 )

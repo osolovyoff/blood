@@ -1,6 +1,6 @@
 #if defined(USE_OPENSSL)
 
-#include "crypt/hash.hxx"
+#include "../../../include/blood/crypt/hash.hxx"
 #include <openssl/sha.h>
 
 using namespace blood::crypt;

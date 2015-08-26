@@ -1,4 +1,5 @@
 #pragma once
+
 #include <memory>
 #include <string>
 #include <vector>
@@ -18,11 +19,12 @@ public:
     static values convert_line_to_values(const std::string& _line);
 
 private:
-    virtual void parse_string_stream(std::stringstream& _ss) override;
+    virtual void parse_string_stream(std::stringstream& _ss);
 
 private:
     std::string m_path;
 
+private:
     std::vector<std::string>              m_header;
     std::vector<std::vector<std::string>> m_table;
 };

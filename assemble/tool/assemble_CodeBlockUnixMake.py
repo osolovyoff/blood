@@ -1,7 +1,7 @@
 import cmake
 
 cmake.buildCmake(
-    'VS2013x64',
+    'CodeBlockUnixMake',
     '../../',
-    '../../project/'
+    '../../assemble/'
 )

@@ -2,11 +2,9 @@
 #include <map>
 #include <vector>
 
-#include "parse/any.hxx"
-
 namespace blood { namespace parse {
 
-class INI: public ANY_Parser
+class INI
 {
     typedef std::pair<std::string,std::string> wordpair;
 
@@ -33,11 +31,12 @@ public:
     std::vector<wordpair>& getData();
 private:
     bool isLineBeSkipped(const std::string& _string);
-    void parseStringStream(std::stringstream& _ss) override;
+    void parseStringStream(std::stringstream& _ss);
     wordpair& findValue(const char* _key);
 
 private:
     std::vector<wordpair> m_data;
+    std::string           m_path;
 
 public:
     const int ERROR_NUMERIC = 2147483646;

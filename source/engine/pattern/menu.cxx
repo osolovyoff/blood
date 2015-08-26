@@ -1,4 +1,5 @@
 #include "pattern/menu.hxx"
+#include "common/input.hxx"
 
 #if defined(BLOOD_32) || defined(BLOOD_VS)
 #include <conio.h>
@@ -7,14 +8,12 @@
 #include <iostream>
 #include <cassert>
 
-#include <common/functions.hxx>
-
 using namespace blood::pattern;
 
 int getMenuNumber()
 {
 
-    const auto key_code = blood::fn::getch();
+    const auto key_code = blood::fn::input::getch();
     const int key = (key_code)-48;
 
     return (key < 0 || 9 < key) ? 666 : key;

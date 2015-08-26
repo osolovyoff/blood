@@ -1,4 +1,4 @@
-#include "net/ftp.hxx"
+#include "../../../include/blood/net/ftp.hxx"
 
 #if defined(USE_CURL)
 

@@ -19,12 +19,12 @@ set(USE_DEFINITION
 )
 # _________________________________________ Directories
 set(BLOOD_ROOT ${CMAKE_HOME_DIRECTORY})
-set(BLOOD_INTERMEDIATE ${BLOOD_ROOT}/build/intermediate/)	
+set(BLOOD_INTERMEDIATE ${BLOOD_ROOT}/assemble/build/intermediate/)
 set(PLATFROM_NAME ${CMAKE_SYSTEM_NAME})
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${BLOOD_ROOT}/build/lib/${PLATFORM_NAME})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${BLOOD_ROOT}/build/lib/${PLATFORM_NAME})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BLOOD_ROOT}/build/bin/${PLATFORM_NAME})
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${BLOOD_ROOT}/assemble/build/lib/${PLATFORM_NAME})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${BLOOD_ROOT}/assemble/build/lib/${PLATFORM_NAME})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BLOOD_ROOT}/assemble/build/bin/${PLATFORM_NAME})
 
 set(CURL_INCLUDE_DIR ${BLOOD_ROOT}/extern/curl/include/)
 
@@ -103,7 +103,7 @@ if(USE_OPENCV)
 endif()
 
 foreach (LIBRARY ${LIBRARIES})
-    add_subdirectory(${BLOOD_ROOT}/extern/${LIBRARY}/ ${BLOOD_ROOT}/build/intermediate/${LIBRARY}/)
+    add_subdirectory(${BLOOD_ROOT}/extern/${LIBRARY}/ ${BLOOD_ROOT}/assemble/build/intermediate/${LIBRARY}/)
 endforeach()
 message(STATUS)
 message(STATUS "Connect libraries: ${LIBRARIES}")
@@ -162,7 +162,6 @@ file(GLOB CODE_CHRONO   "${BLOOD_INCLUDE_DIR}chrono/*.hxx"   "${BLOOD_SOURCE_DIR
 file(GLOB CODE_CRYPT    "${BLOOD_INCLUDE_DIR}crypt/*.hxx"    "${BLOOD_SOURCE_DIR}crypt/*.cxx")
 file(GLOB CODE_PARSER   "${BLOOD_INCLUDE_DIR}parse/*.hxx"    "${BLOOD_SOURCE_DIR}parse/*.cxx")
 file(GLOB CODE_NET      "${BLOOD_INCLUDE_DIR}net/*.hxx"      "${BLOOD_SOURCE_DIR}net/*.cxx")
-file(GLOB CODE_FUNC     "${BLOOD_INCLUDE_DIR}fn/*.hxx"       "${BLOOD_SOURCE_DIR}fn/*.cxx")
 file(GLOB CODE_SYS      "${BLOOD_INCLUDE_DIR}sys/*.hxx"      "${BLOOD_SOURCE_DIR}sys/*.cxx")
 file(GLOB CODE_PATTERN  "${BLOOD_INCLUDE_DIR}pattern/*.hxx"  "${BLOOD_SOURCE_DIR}pattern/*.cxx")
 file(GLOB CODE_VISION   "${BLOOD_INCLUDE_DIR}vision/*.hxx"   "${BLOOD_SOURCE_DIR}vision/*cxx")
@@ -172,8 +171,8 @@ source_group(common                           FILES ${CODE_COMMON})
 source_group(chrono                           FILES ${CODE_CHRONO})
 source_group(crypt                            FILES ${CODE_CRYPT})
 source_group(parse                            FILES ${CODE_PARSER})
-source_group(network                          FILES ${CODE_NET})
-source_group(fn                               FILES ${CODE_FUNC})
+source_group(net                              FILES ${CODE_NET})
+source_group(text                             FILES ${CODE_TEXT})
 source_group(system                           FILES ${CODE_SYS} )
 source_group(pattern                          FILES ${CODE_PATTERN})
 source_group(vision                           FILES ${CODE_VISION})
@@ -224,10 +223,9 @@ endif()
 # __________________________________________ Build Engine
 add_library(blood STATIC ${BLOOD_SOURCES_FILES})
 # __________________________________________ Build Project
-set(BLOOD_INCLUDES  ${BLOOD_INCLUDE_DIR} ${BLOOD_ROOT}/include/)
 set(BLOOD_LIBRARIES ${BLOOD_LIBRARIES} ${BLOOD_ROOT})
 
-include_directories(${BLOOD_INCLUDES} )
+include_directories(${BLOOD_INCLUDE_DIR})
 link_directories(${BLOOD_LIBRARIES})
 
 file(GLOB PROJECT_CODE "${BLOOD_ROOT}/source/code/*.*")

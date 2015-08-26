@@ -1,5 +1,4 @@
 #pragma once
-//#include "engine/platform.hpp"
 
 #include "sys/sysinfo_win.hxx"
 #include "sys/sysinfo_nix.hxx"

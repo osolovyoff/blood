@@ -51,7 +51,7 @@ public:
     bool processing();
     void help() const;
 
-    std::string getPath() const { return m_path; };
+    std::string get_path() const { return m_path; };
     unsigned int getArgumentsCount() const { return m_args.size(); };
 
 private:

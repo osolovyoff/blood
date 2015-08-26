@@ -1,7 +1,7 @@
 import cmake
 
 cmake.buildCmake(
-    'VS2013',
+    'VS2013x64',
     '../../',
-    '../../project/'
+    '../../assemble/'
 )

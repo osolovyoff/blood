@@ -1,6 +1,7 @@
 #include "net/ip.hxx"
+#include "common/encoding.hxx"
+
 #include <vector>
-#include <blood>
 
 namespace blood { namespace net {
 
@@ -131,8 +132,8 @@ string IP::convert_value_to_string(const uint& _value)
 
 uint IP::convert_string_to_value(const string& _string)
 {
-    std::vector<std::string> v;
-    blood::fn::splitString(_string, '.', v);
+    std::vector<std::string> v =
+    blood::fn::text::split_string(_string, '.');
 
     uint value = 0;
     for (int i = 0; i < 4; ++i)

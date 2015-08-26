@@ -1,4 +1,5 @@
 #include "net/network.hxx"
+#include "common/encoding.hxx"
 #include <iostream>
 #include <algorithm>
 
@@ -139,7 +140,7 @@ std::pair<std::string, std::vector<int>> Network::parseQuaggaLine(std::string& _
 
             const std::string as_line = _line.substr(begin, end - begin);
 
-            auto data = blood::fn::splitString(as_line, ' ');
+            std::vector<std::string> data = blood::fn::text::split_string(as_line, ' ');
             if (!data.empty())
             {
                 for (auto& elem : data)

@@ -1,14 +1,14 @@
 #include <parse/csv.hxx>
-#include <common/functions.hxx>
+#include <common/encoding.hxx>
 
 #include <fstream>
-#include <algorithm>
+#include <sstream>
 #include <iterator>
+#include <algorithm>
 
 using namespace blood::parse;
     
 CSV::CSV(const char* _path, const bool _has_header)
-: ANY_Parser(_path)
 {
     std::ifstream fin(_path, std::ios::in);
     if (fin.is_open())
@@ -67,7 +67,7 @@ CSV::values CSV::convert_line_to_values(const std::string& _line)
     line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
     if (!line.empty())
     {
-        blood::fn::splitString(line, ',', row);
+        row = blood::fn::text::split_string(line, ',');
     }
     return row;
 }

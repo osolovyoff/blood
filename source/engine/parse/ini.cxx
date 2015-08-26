@@ -8,7 +8,6 @@
 using namespace blood::parse;
 
 INI::INI(const char* _path)
-: ANY_Parser(_path)
 {
     std::ifstream fin(_path, std::ios::in);
     if (fin.is_open())
@@ -28,7 +27,6 @@ INI::INI(const char* _path)
 }
 
 INI::INI(const std::string& _data_string)
-: ANY_Parser(_data_string)
 {
     std::stringstream ss; ss << _data_string;
     parseStringStream(ss);
