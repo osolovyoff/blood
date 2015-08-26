@@ -1,13 +1,7 @@
 #__________________________________________BUILD
-build/
-
-
-#__________________________________________DEPENDENCE
-dep/
-
+assemble/build/
 
 #__________________________________________EXTERN
-
 extern/openssl/build/
 extern/openssl/tmp32.dbg/
 extern/boost/
@@ -16,20 +10,17 @@ extern/vtk/
 extern/opencv/3rdparty/ippicv/downloads/
 extern/opencv/3rdparty/ippicv/unpack/
 extern/opencv/samples/
-
-
-
-
+#__________________________________________TOOL
+assemble/tool/__pycache__/
+assemble/tool/*.pyc
 #__________________________________________PROJECT
-project/assemble/__pycache__/
-project/assemble/assemble.pyc
-project/VS2015ARM/
-project/VS2015x64/
-project/VS2015/
-project/VS2013x64/
-project/VS2013/
-project/CodeBlockUnixMake/
-project/UnixMake/
+assemble/VS2015ARM/
+assemble/VS2015x64/
+assemble/VS2015/
+assemble/VS2013x64/
+assemble/VS2013/
+assemble/CodeBlockUnixMake/
+assemble/UnixMake/
 #*__pycache__*
 
 
