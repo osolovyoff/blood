@@ -4,15 +4,22 @@
 TODO
 
 ## How to build
-TODO
+
 
 ## Dependencies
-TODO
+- [x] C++11
+- [x] CMake
+- [x] Python
+- [x] Strawberry Perl
+<br>
+This stuff provides comfortable engine use
+
 
 ## Requirements
 TODO
 
 ## License
+[ Copyright © 2015 Oleg Solovyov] (https://github.com/vbloodv/blood/blob/master/LICENSE)
 
 ## Problems
 Please report any problems by [opening an issue](https://github.com/vbloodv/blood/issues/new).
