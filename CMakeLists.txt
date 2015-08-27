@@ -5,7 +5,7 @@ project(blood)
 project(${project_name})
 # _________________________________________ Options
 option(BUILD_LIBRARY "Switching between library and executable" OFF)
-option(64-Bit "Build x64 platform" ON)
+option(64-Bit "Build x64 platform" OFF)
 option(STORE "Create Windows 8.1 or more; Store application" OFF)
 # _________________________________________ Use technology
 set(USE_DEFINITION

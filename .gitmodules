@@ -1,0 +1,3 @@
+[submodule "extern/curl"]
+	path = extern/curl
+	url = https://github.com/bagder/curl
