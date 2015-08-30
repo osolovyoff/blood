@@ -6,8 +6,8 @@ include(assemble/cmake/configuration.cmake)
 
 set(project_name vbloodv)
 project(${project_name})
-
 # _________________________________________ Options
+
 
 option(BUILD_LIBRARY "Switching between library and executable" OFF)
 option(64-Bit "Build x64 platform" OFF)
