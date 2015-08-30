@@ -1,273 +1,54 @@
 cmake_minimum_required(VERSION 3.0)
-set(project_name hello)
-# _________________________________________ Project name
-project(blood)
+
+include(assemble/cmake/parse.cmake)
+include(assemble/cmake/submodule.cmake)
+include(assemble/cmake/configuration.cmake)
+
+set(project_name vbloodv)
 project(${project_name})
+
 # _________________________________________ Options
+
 option(BUILD_LIBRARY "Switching between library and executable" OFF)
 option(64-Bit "Build x64 platform" OFF)
 option(STORE "Create Windows 8.1 or more; Store application" OFF)
 # _________________________________________ Use technology
-set(USE_DEFINITION
-    #USE_CURL
-    #USE_OPENSSL
-    #USE_OCULUS
-    #USE_SDL2
-    #USE_BOOST
-    #USE_DIRECTX
-    #USE_OPENCV
-)
-# _________________________________________ Directories
-set(BLOOD_ROOT ${CMAKE_HOME_DIRECTORY})
-set(BLOOD_INTERMEDIATE ${BLOOD_ROOT}/assemble/build/intermediate/)
-set(PLATFROM_NAME ${CMAKE_SYSTEM_NAME})
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${BLOOD_ROOT}/assemble/build/lib/${PLATFORM_NAME})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${BLOOD_ROOT}/assemble/build/lib/${PLATFORM_NAME})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BLOOD_ROOT}/assemble/build/bin/${PLATFORM_NAME})
+option(USE_BOOST   "" OFF)
+option(USE_CURL    "" OFF)
+option(USE_OPENSSL "" OFF)
+option(USE_OPENCV  "" OFF)
+option(USE_OCULUS  "" OFF)
 
-set(CURL_INCLUDE_DIR ${BLOOD_ROOT}/extern/curl/include/)
+# _________________________________________ Processing
 
-set(64-Bit ${64-Bit} CACHE STRING "" FORCE)
-# _________________________________________ Target machine
-IF(COMMAND cmake_policy)
-	CMAKE_POLICY(SET CMP0003 NEW)
-ENDIF(COMMAND cmake_policy)
+submodule_fill_technology_list()
+submodule_initialize_engine_paths()
 
-if(64-Bit)
-    if(CMAKE_SIZEOF_VOID_P EQUAL 4)
-        set(MACHINE_TARGET x86)
-        set(x86 1)
-    else()
-        set(MACHINE_TARGET x64)
-        set(x64 1)
-    endif()    
-endif()
+configuration_project()
+configuration_linking_flags()
+configuration_project_types()
 
-if(STORE)
-	set(APP_MANIFEST_NAME Package.appxmanifest)
-	set(CMAKE_SYSTEM_NAME WindowsStore CACHE STRING "" FORCE)
-	set(CMAKE_SYSTEM_VERSION 8.1  CACHE STRING "" FORCE)
-	SET(CMAKE_VS_TARGET_PLATFORM 8.1)
-	set(CMAKE_VS_PLATFORMS Win32;x64;ARM)
-	set(PLATFROM STORE)
-	set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-	set(EXE_NAME   ${PRODUCT})
-	set(SHORT_NAME ${PRODUCT})
-endif()
+submodule_connect_external_projects()
 
-if(win32)
-    set(BLOOD_PLATFORM ${BLOOD_PLATFORM} BLOOD_32)
-endif()
-if(UNIX)
-    set(BLOOD_PLATFORM ${BLOOD_PLATFORM} BLOOD_UNIX)
-endif()
-if(MINGW)
-    set(BLOOD_PLATFORM ${BLOOD_PLATFORM} BLOOD_MINGW)
-endif()
-if(SYGWIN)
-    set(BLOOD_PLATFORM ${BLOOD_PLATFORM} BLOOD_SYGWIN)
-endif()
-if(MSVC)
-    set(BLOOD_PLATFORM ${BLOOD_PLATFORM} BLOOD_VS)
-    if(STORE)
-    	set(BLOOD_STORE ${BLOOD_PLATFROM} BLOOD_STORE)
-    endif()
-endif()
-message(STATUS Platform = ${BLOOD_PLATFORM})
-# _________________________________________ Use libraries
-foreach(USING ${USE_DEFINITION})
-	set(${USING} ON)
-endforeach()
-# _________________________________________ Library find
-if(USE_OPENSSL)
-	set(LIBRARIES ${LIBRARIES} openssl)
-endif()
-if(USE_CURL)
-	set(LIBRARIES ${LIBRARIES} curl)	
-endif()
-if(USE_OCULUS)
-	set(LIBRARIES ${LIBRARIES} oculus)	
-endif()
-if(USE_SDL2)
-	set(LIBRARIES ${LIBRARIES} sdl2)	
-endif()
-if(USE_BOOST)
-	set(LIBRARIES ${LIBRARIES} boost)	
-endif()
-if(USE_DIRECTX)
-	set(LIBRARIES ${LIBRARIES} directx)	
-endif()
-if(USE_OPENCV)
-    set(LIBRARIES ${LIBRARIES} opencv)
-endif()
+parse_add_source_groups()
+print_connection_libraries()
 
-foreach (LIBRARY ${LIBRARIES})
-    add_subdirectory(${BLOOD_ROOT}/extern/${LIBRARY}/ ${BLOOD_ROOT}/assemble/build/intermediate/${LIBRARY}/)
-endforeach()
-message(STATUS)
-message(STATUS "Connect libraries: ${LIBRARIES}")
-message(STATUS)
-# _________________________________________ Project configurations LINK and COMPILE
-foreach(USING ${USE_DEFINITION})
-	add_definitions(-D${USING})
-endforeach()
-
-add_definitions(-D${BLOOD_PLATFORM})
-
-if(MSVC)
-	add_definitions(-D _CRT_SECURE_NO_WARNINGS)
-	add_definitions(/sdl /EHsc /Od /RTC1 /GS)
-	add_definitions(/MTd /Zi)
-endif()
-
-if(USE_CURL)
-	add_definitions(-D BUILDING_LIBCURL)
-    add_definitions(-D CURL_STATICLIB)
-endif()
-
-if(USE_OPENSSL)
-	add_definitions(-D USE_SSLEAY)
-endif()
-
-if(UNIX)
-    #add_definitions(-fpermissive -std=c++11)
-endif()
-# _________________________________________ Set library flags
-if(CMAKE_CONFIGURATION_TYPES)
-    set(CMAKE_CONFIGURATION_TYPES "DEBUG;RELEASE;")
-    set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING "" FORCE)
-endif()
-
-if(UNIX)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive -std=c++11")
-	set(CMAKE_C++_LINK_EXECUTABLE "${CMAKE_CXX_LINK_EXECUTABLE}") 
-endif()
-
-if(MSVC)
-	if(STORE)
-		set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} /MDd /ZW /Ob0 /Od /EHsc /RTC1 /D_DEBUG")
-    	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD /O2 /Ob2 /D NDEBUG")
-	else()
-		set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} /MTd /Zi /Ob0 /Od /EHsc /RTC1 /D_DEBUG")
-    	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT /O2 /Ob2 /D NDEBUG")	
-	endif()
-endif()
-# _________________________________________ Source code
-set(BLOOD_INCLUDE_DIR "${BLOOD_ROOT}/include/blood/")
-set(BLOOD_SOURCE_DIR  "${BLOOD_ROOT}/source/engine/")
-
-file(GLOB CODE_COMMON   "${BLOOD_INCLUDE_DIR}common/*.hxx"   "${BLOOD_SOURCE_DIR}common/*.cxx")
-file(GLOB CODE_CHRONO   "${BLOOD_INCLUDE_DIR}chrono/*.hxx"   "${BLOOD_SOURCE_DIR}chrono/*.cxx")
-file(GLOB CODE_CRYPT    "${BLOOD_INCLUDE_DIR}crypt/*.hxx"    "${BLOOD_SOURCE_DIR}crypt/*.cxx")
-file(GLOB CODE_PARSER   "${BLOOD_INCLUDE_DIR}parse/*.hxx"    "${BLOOD_SOURCE_DIR}parse/*.cxx")
-file(GLOB CODE_NET      "${BLOOD_INCLUDE_DIR}net/*.hxx"      "${BLOOD_SOURCE_DIR}net/*.cxx")
-file(GLOB CODE_SYS      "${BLOOD_INCLUDE_DIR}sys/*.hxx"      "${BLOOD_SOURCE_DIR}sys/*.cxx")
-file(GLOB CODE_PATTERN  "${BLOOD_INCLUDE_DIR}pattern/*.hxx"  "${BLOOD_SOURCE_DIR}pattern/*.cxx")
-file(GLOB CODE_VISION   "${BLOOD_INCLUDE_DIR}vision/*.hxx"   "${BLOOD_SOURCE_DIR}vision/*cxx")
-file(GLOB CODE_GRAPHIC  "${BLOOD_INCLUDE_DIR}gfx/*.hxx"      "${BLOOD_SOURCE_DIR}gfx/*cxx")
-
-source_group(common                           FILES ${CODE_COMMON})
-source_group(chrono                           FILES ${CODE_CHRONO})
-source_group(crypt                            FILES ${CODE_CRYPT})
-source_group(parse                            FILES ${CODE_PARSER})
-source_group(net                              FILES ${CODE_NET})
-source_group(text                             FILES ${CODE_TEXT})
-source_group(system                           FILES ${CODE_SYS} )
-source_group(pattern                          FILES ${CODE_PATTERN})
-source_group(vision                           FILES ${CODE_VISION})
-source_group(graphic                          FILES ${CODE_GRAPHIC})
-
-set(BLOOD_SOURCES_FILES
-    ${CODE_COMMON}
-    ${CODE_CHRONO}
-    ${CODE_CRYPT}
-    ${CODE_PARSER}
-    ${CODE_GRAPHICS}
-    ${CODE_NET}
-    ${CODE_FUNC}
-    ${CODE_SYS}
-    ${CODE_PATTERN}    
-    ${CODE_VISION}
-)
-# __________________________________________ Include and Link directories
-if(USE_CURL)
-    set(BLOOD_INCLUDES ${BLOOD_INCLUDES} ${CURL_INCLUDE_DIR})
-endif()
-if(USE_SDL2)
-    set(BLOOD_INCLUDES ${BLOOD_INCLUDES} ${SDL2_INCLUDE_DIR})
-endif()
-if(USE_OCULUS)
-    set(BLOOD_INCLUDES ${BLOOD_INCLUDES} ${OCULUS_INCLUDE_DIR})
-endif()
-if(USE_OPENSSL)
-    set(BLOOD_INCLUDES ${BLOOD_INCLUDES} ${OPENSSL_INCLUDE_DIR})
-endif()
-if(USE_DIRECTX)
-    set(BLOOD_INCLUDES ${BLOOD_INCLUDES} ${D3DX_INCLUDE_DIR})
-    set(BLOOD_LIBRARIES ${BLOOD_INCLUDES} ${D3DX_LIBRARIES_DIR})
-endif()
-if(USE_BOOST)
-    set(BLOOD_INCLUDES ${BLOOD_INCLUDES} ${BOOST_ROOT_DIR} ${BOOST_INCLUDE_DIRS})
-    set(BLOOD_LIBRARIES ${BLOOD_INCLUDES} ${BOOST_LIBRARY_DIR})
-endif()
-if(USE_OPENCV)
-	set(BLOOD_INCLUDES ${BLOOD_INCLUDES} ${OpenCV_SOURCE_DIR}/include/)
-	foreach(_module ${OpenCVModules_TARGETS})
-		set(_module_path ${${_module}_SOURCE_DIR}/)
-		set(BLOOD_INCLUDES ${BLOOD_INCLUDES} ${_module_path}include/)
-        set(BLOOD_LIBRARIES ${BLOOD_INTERMEDIATE}/opencv/lib/)
-        set(BLOOD_LIBRARIES ${BLOOD_INTERMEDIATE}/opencv/3rdparty/)
-	endforeach()
-endif()
-# __________________________________________ Build Engine
-add_library(blood STATIC ${BLOOD_SOURCES_FILES})
-# __________________________________________ Build Project
-set(BLOOD_LIBRARIES ${BLOOD_LIBRARIES} ${BLOOD_ROOT})
+# _________________________________________ Processing
 
 include_directories(${BLOOD_ROOT}/include/)
 link_directories(${BLOOD_LIBRARIES})
+
+add_library(blood STATIC ${BLOOD_SOURCES_FILES})
+
+# _________________________________________ Create template project ${project_name}
 
 file(GLOB PROJECT_CODE "${BLOOD_ROOT}/source/code/*.*")
 source_group("" FILES ${PROJECT_CODE})
 add_executable(${project_name} ${PROJECT_CODE})
 
+# _________________________________________ Set targets
+
+set_target_properties(blood           PROPERTIES LINKER_LANGUAGE C++)
 set_target_properties(${project_name} PROPERTIES LINKER_LANGUAGE C++)
 target_link_libraries(${project_name} blood)
-# _________________________________________ set libraries
-set_target_properties(blood           PROPERTIES LINKER_LANGUAGE C++)
-
-if(USE_CURL)
-    target_link_libraries(${project_name} libcurl)
-endif()
-if(USE_OCULUS)
-    target_link_libraries(${project_name} oculus)
-endif()
-if(USE_SDL2)
-    target_link_libraries(${project_name} sdl2)	
-endif()
-
-if(USE_BOOST)
-    target_link_libraries(${project_name} ${BOOST_LIBRARIES})
-endif()
-if(USE_OPENCV)
-    target_link_libraries(${project_name} IlmImf libjasper libjpeg libpng libtiff libwebp zlib)
-    target_link_libraries(${project_name} comctl32 comdlg32 gdi32 vfw32 user32 oleaut32)
-    target_link_libraries(${project_name} opencv_calib3d opencv_core opencv_features2d opencv_flann opencv_hal
-                                opencv_highgui opencv_imgcodecs opencv_imgproc opencv_ts opencv_shape
-                                opencv_photo opencv_ml opencv_stitching opencv_superres opencv_video
-                                opencv_videoio opencv_videostab opencv_objdetect)
-endif()
-
-if(USE_OPENSSL)
-	if(MSVC)
-	    set(LIB_TO_LINK
-	    	Shell32 Advapi32 ws2_32 wldap32 winmm mswsock
-	    	user32 gdi32 imm32 ole32 oleaut32 uuid version)
-	    target_link_libraries(${project_name} ${LIB_TO_LINK})
-        target_link_libraries(${project_name} ${OPENSSL_LIBRARIES})
-	elseif(UNIX)
-        target_link_libraries(${project_name} crypto)
-	    target_link_libraries(${project_name} ${OPENSSL_LIBRARIES})
-	endif()
-endif()

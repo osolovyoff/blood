@@ -189,7 +189,7 @@ void INI::setValue(const char* _key, const char* _value)
         s = std::make_pair(_key, _value);
 }
 
-INI::wordpair& INI::findValue(const char* _key)
+INI::wordpair INI::findValue(const char* _key)
 {
     for (auto& i : m_data)
     {

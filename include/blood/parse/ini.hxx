@@ -32,7 +32,7 @@ public:
 private:
     bool isLineBeSkipped(const std::string& _string);
     void parseStringStream(std::stringstream& _ss);
-    wordpair& findValue(const char* _key);
+    wordpair findValue(const char* _key);
 
 private:
     std::vector<wordpair> m_data;
