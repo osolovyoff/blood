@@ -1,6 +1,5 @@
 #pragma once
 #ifndef macros_hxx
-#include "encoding.hxx"
 
 #define blood_is_null(x) x == 0
 #define blood_is_not_null(x) != 0
