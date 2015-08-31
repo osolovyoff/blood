@@ -6,7 +6,8 @@ namespace blood { namespace fn { namespace text {
     std::string               convert_wstring_to_unicode(std::wstring in);
     std::wstring              convert_multybyte_to_wstring(std::string  in);
     std::wstring              convert_string_to_wstring(std::string in);
-    std::string               convert_cp1251_to_unicode(std::string);
+    void                      convert_cp1251_to_unicode(std::string input, char* out);
+    std::string               narrow_string(const std::wstring& str, const char* local_name = "C");
     std::string               replace(std::string& in, const std::string& from, const std::string& to);
     std::wstring              replace(std::wstring& in, const std::wstring& from, const std::wstring& to);
 

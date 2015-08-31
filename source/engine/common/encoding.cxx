@@ -8,7 +8,16 @@
 
 std::string blood::fn::text::convert_wstring_to_unicode(std::wstring in)
 {
-    return std::string();
+    std::string result;
+#if defined(BLOOD_VS) || defined(BLOOD_32)
+    char dst[1024];
+    const wchar_t* src = in.c_str();;
+    size_t size = in.size();
+    wcstombs(dst,src,size);
+    dst[size] = '\0';
+    result = dst;
+#endif
+    return result;
 }
 
 std::wstring blood::fn::text::convert_multybyte_to_wstring(std::string in)
@@ -28,11 +37,11 @@ std::wstring blood::fn::text::convert_string_to_wstring(std::string in)
     return std::wstring(in.begin(), in.end());
 }
 
-std::string blood::fn::text::convert_cp1251_to_unicode(std::string input)
+void /*std::string*/ blood::fn::text::convert_cp1251_to_unicode(std::string input, char* out)
 {
     const int size = input.size();
     char *in;
-    char *out;
+    //char *out;
     in = new char[size];
     out = new char[size * 2];
 
@@ -67,13 +76,26 @@ std::string blood::fn::text::convert_cp1251_to_unicode(std::string input)
     else
         *out++ = *in++;
     *out = 0;
-return std::string(out);
+//return std::string(out);
+}
+
+std::string blood::fn::text::narrow_string(const std::wstring& str, const char* local_name /*= "C"*/)
+{
+    std::string result;
+    result.resize(str.size());
+
+    std::locale loc(local_name);
+
+    std::use_facet<std::ctype<wchar_t> >(loc).narrow(
+        str.c_str(), str.c_str() + str.size(), '?', &*result.begin());
+
+    return result;
 }
 
 std::vector<std::string> blood::fn::text::split_string(std::string in, const char symbol)
 {
     std::vector<std::string> elements;
-    std::stringstream ss(symbol);
+    std::stringstream ss(in);
     std::string item;
     while (std::getline(ss, item, symbol))
         elements.push_back(item);
@@ -83,7 +105,7 @@ std::vector<std::string> blood::fn::text::split_string(std::string in, const cha
 std::vector<std::wstring> blood::fn::text::split_wstring(std::wstring in, const wchar_t symbol)
 {
     std::vector<std::wstring> elements;
-    std::wstringstream ss(symbol);
+    std::wstringstream ss(in);
     std::wstring item;
     while (std::getline(ss, item, symbol))
         elements.push_back(item);

@@ -12,7 +12,6 @@ using namespace blood::pattern;
 
 int getMenuNumber()
 {
-
     const auto key_code = blood::fn::input::getch();
     const int key = (key_code)-48;
 
