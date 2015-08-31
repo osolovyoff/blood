@@ -1,4 +1,4 @@
-#include "../../../include/blood/common/input.hxx"
+#include "../../../include/blood/common/input.hxx"                                   
 
 #include <conio.h>
 #include <iostream>
@@ -12,7 +12,7 @@ std::string blood::fn::input::get_string()
 
 int blood::fn::input::get_menu_number()
 {
-    const auto key_code = _getch();
+    const auto key_code = blood::fn::input::getch();
     const int key = (key_code)-48;
 
     return (key < 0 || 9 < key) ? -1 : key;
@@ -20,7 +20,7 @@ int blood::fn::input::get_menu_number()
 
 bool blood::fn::input::get_yes_no()
 {
-    const auto key_code = getch();
+    const auto key_code = blood::fn::input::getch();
     return (key_code == 121 || key_code == 173) ? true : false;
 }
 
