@@ -14,6 +14,8 @@ option(BUILD_LIBRARY "Switcher between library and executable" OFF)
 
 # _________________________________________ Use technology
 
+LSFKDJF:SLDKFJS:DLFKJSD WIX x86 ERROR for PLATFORMSFSDFKJSDLKFSDJFSLDKF DIRECTX11 use x86 use 64
+
 option(USE_BOOST   "" OFF)
 option(USE_CURL    "" OFF)
 option(USE_OPENCV  "" OFF)
