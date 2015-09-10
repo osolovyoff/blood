@@ -7,6 +7,7 @@ function(parse_add_source_groups)
 		chrono
 		crypt
 		parse
+		gui
 		net
 		sys
 		pattern

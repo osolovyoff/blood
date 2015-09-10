@@ -33,7 +33,7 @@ include (FindPackageMessage)
 
 if (WIN32)
 
-    if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    if (${ADDRESS_MODEL_64})
         set (DirectX_ARCHITECTURE x64)
     else ()
         set (DirectX_ARCHITECTURE x86)

@@ -1,4 +1,4 @@
-#include "../../../include/blood/sys/window_winapi.hxx"
+#include "../../../include/blood/gui/window_winapi.hxx"
 #include <exception>
 
 static const int ms_bits = 32;

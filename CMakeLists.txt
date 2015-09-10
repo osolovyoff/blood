@@ -8,13 +8,11 @@ set(project_name vbloodv)
 project(${project_name})
 # _________________________________________ Options
 
-option(64-Bit "Build x64 platform" ON)
-option(STORE "Create Windows 8.1 or more; Store application" OFF)
-option(BUILD_LIBRARY "Switcher between library and executable" OFF)
+option(ADDRESS_MODEL_64 "Build x64 platform"                            ON)
+option(STORE            "Create Windows 8.1 or more; Store application" OFF)
+option(BUILD_LIBRARY    "Switcher between library and executable"       OFF)
 
 # _________________________________________ Use technology
-
-LSFKDJF:SLDKFJS:DLFKJSD WIX x86 ERROR for PLATFORMSFSDFKJSDLKFSDJFSLDKF DIRECTX11 use x86 use 64
 
 option(USE_BOOST   "" OFF)
 option(USE_CURL    "" OFF)

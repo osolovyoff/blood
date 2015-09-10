@@ -40,7 +40,6 @@ function(configuration_initialize_engine_paths)
 	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} PARENT_SCOPE)
 	
 	#set(CURL_INCLUDE_DIR ${BLOOD_ROOT}/extern/curl/include/ PARENT_SCOPE)
-	set(64-Bit ${64-Bit} PARENT_SCOPE)
 endfunction()
 
 function(configuration_linking_flags)
@@ -70,7 +69,7 @@ function(configuration_project_types)
 		CMAKE_POLICY(SET CMP0003 NEW)
 	endif(COMMAND cmake_policy)
 
-	if(64-Bit)
+	if(ADDRESS_MODEL_64)
 	    if(CMAKE_SIZEOF_VOID_P EQUAL 4)
 	        set(MACHINE_TARGET x86 PARENT_SCOPE)
 	        set(x86 1 PARENT_SCOPE)
