@@ -85,7 +85,7 @@ void DXDevice::release()
 
 void DXDevice::render()
 {
-    float ClearColor[4] = { 0.0f, 0.9f, 0.5f, 1.0f };
+    float ClearColor[4] = { 1.0f, 0.0f, 0.6f, 1.0f };
     m_immediate_contex->ClearRenderTargetView(m_render_target_view, ClearColor);
 
     m_swap_chain->Present(0, 0);
