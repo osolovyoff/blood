@@ -1,11 +1,13 @@
 #include "../../../include/blood/gui/window_winapi.hxx"
 #include <exception>
+#include <windows.h>
+#include <winuser.h>
 
 static const int ms_bits = 32;
 
 LRESULT CALLBACK procedure(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-using namespace blood::sys;
+using namespace blood::gui;
 
 WindowWinApi::WindowWinApi()
 : m_hwnd(NULL)
@@ -120,9 +122,10 @@ void WindowWinApi::release()
     {
         m_instance = NULL;
     }
+    m_hwnd = NULL;
 }
 
-void WindowWinApi::setFullscreen(bool fullscreen /*= true*/)
+void WindowWinApi::set_fullscreen(bool fullscreen /*= true*/)
 {
     m_fullscreen = fullscreen;
 }
@@ -130,4 +133,9 @@ void WindowWinApi::setFullscreen(bool fullscreen /*= true*/)
 void WindowWinApi::set_procedure(callback_wnd_procedure* fn)
 {
     m_wnd_procedure = fn;
+}
+
+bool blood::gui::WindowWinApi::is_created() const
+{
+    return m_hwnd;
 }

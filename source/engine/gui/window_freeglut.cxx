@@ -1,4 +1,4 @@
-#include "blood/sys/window_freeglut.hxx"
+#include "../../../include/blood/gui/window_freeglut.hxx"
 
 #if defined(USE_FREEGLUT) 
 

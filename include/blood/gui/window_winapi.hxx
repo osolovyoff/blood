@@ -4,7 +4,7 @@
 #include <windows.h>
 #include <memory>
 
-namespace blood { namespace sys {
+namespace blood { namespace gui {
 
 class WindowWinApi
 {
@@ -16,11 +16,16 @@ public:
     void initialize(const char* title, int w, int h);
     void release();
 
-    void show();
-    void setFullscreen(bool fullscreen = true);
-    bool isCreated() const;
-
+    void set_fullscreen(bool fullscreen = true);
     void set_procedure(callback_wnd_procedure* fn);
+
+    void show();
+
+    bool is_created() const;
+
+    int  get_w() const { return m_w; }
+    int  get_h() const { return m_h; }
+    HWND get_hwnd() const { return m_hwnd; }
 
 private:
     int         m_w;

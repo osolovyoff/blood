@@ -96,10 +96,15 @@ function(submodule_link_dependence)
 		if(DirectX_11)
 			target_link_libraries(${project_name} d3dx11)
 		endif()
-		#pragma comment(lib, "d3d11.lib")
-#pragma comment(lib, "dxgi.lib")
-#pragma comment(lib, "d3dcompiler.lib")
-#pragma comment(lib, "winmm.lib")
+		target_link_libraries(${project_name} User32)
+		#d3d11.lib
+		#d3dcompiler.lib
+		#d3dx11d.lib
+		#d3dx9d.lib
+		#dxerr.lib
+		#dxguid.lib
+		#winmm.lib
+		#comctl32.lib
 	endif()
 	if(USE_SDL2)
 	    target_link_libraries(${project_name} sdl2)	
