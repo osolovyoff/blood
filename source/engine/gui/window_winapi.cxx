@@ -76,16 +76,18 @@ void WindowWinApi::initialize(const char* title, int w, int h)
     }
 
     AdjustWindowRectEx(&WindowRect, dwStyle, false, dwExStyle);
+    const POINT display_center = get_display_center();                                                                                                                           
+    const POINT window_size = { WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top };
     
     m_hwnd = CreateWindowEx
-        ( dwExStyle
+        (dwExStyle
         , ms_class_name
         , title
         , WS_CLIPSIBLINGS | WS_CLIPCHILDREN | dwStyle
-        , 0 // position x
-        , 0 // position y
-        , WindowRect.right - WindowRect.left
-        , WindowRect.bottom - WindowRect.top
+        , display_center.x - (window_size.x / 2.0f)
+        , display_center.y - (window_size.y / 2.0f)
+        , window_size.x
+        , window_size.y
         , NULL
         , NULL
         , m_instance
@@ -138,4 +140,12 @@ void WindowWinApi::set_procedure(callback_wnd_procedure* fn)
 bool blood::gui::WindowWinApi::is_created() const
 {
     return m_hwnd;
+}
+
+POINT blood::gui::WindowWinApi::get_display_center()
+{
+    const int center_x = (int)GetSystemMetrics(SM_CXSCREEN)/2.0f;
+    const int center_y = (int)GetSystemMetrics(SM_CYSCREEN)/2.0f;
+    const POINT point = { center_x, center_y };
+    return point;
 }

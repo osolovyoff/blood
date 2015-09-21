@@ -3,15 +3,16 @@ function(parse_add_source_groups)
 	set(BLOOD_SOURCE_DIR  "${BLOOD_ROOT}/source/engine/")
 
 	set(SCAN_FOLDERS
+		pattern
 		common
 		chrono
+		vision
 		crypt
 		parse
+		math
 		gui
 		net
 		sys
-		pattern
-		vision
 		gfx
 	)
 	

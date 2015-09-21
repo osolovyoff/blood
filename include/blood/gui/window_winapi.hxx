@@ -28,6 +28,9 @@ public:
     HWND get_hwnd() const { return m_hwnd; }
 
 private:
+    static POINT get_display_center();
+
+private:
     int         m_w;
     int         m_h;
     HWND        m_hwnd;

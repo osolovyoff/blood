@@ -1,5 +1,4 @@
 #include "app.hxx"
-#include "window.hxx"
 
 #include <windows.h>
 #include <winuser.h>
@@ -12,7 +11,7 @@ void App::start()
     m_device.reset(new DXDevice);
 
     m_window->set_procedure(window_processing);
-    m_window->initialize("informer", 800, 600);
+    m_window->initialize("Quatro", 800, 600);
     m_device->initialize(m_window->get_hwnd(), 800, 600, false);
     m_window->show();
     MSG msg = { 0 };
@@ -25,6 +24,7 @@ void App::start()
         }
         else
         {
+            m_device->update();
             m_device->render();
         }
     }
@@ -36,6 +36,13 @@ LRESULT CALLBACK window_processing(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lp
     {
     case WM_KEYDOWN:
         App::get_instance().m_window->release();
+        return 0;
+    case WM_CLOSE:
+        App::get_instance().m_window->release();
+        return 0;
+    case WM_DESTROY:
+        App::get_instance().m_window->release();
+        return 0;
     default:
         return DefWindowProc(hwnd, msg, wparam, lparam);
         break;

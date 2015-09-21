@@ -2,12 +2,18 @@
 #ifndef BLOOD_DXCAMERA
 #define BLOOD_DXCAMERA
 
+#include <d3d11.h>
+#include <d3dx11.h>
+#include <d3dx9math.h>
+
 class Camera
 {
 public:
-    void initialize();
+    Camera();
+    void set_view_params(D3DXVECTOR3* eye, D3DXVECTOR3* lockat);
+    void set_projection_params(float fov, float aspect, float near_plane, float far_plane);
 
-    void yaw(float angle);
+    /*void yaw(float angle);
     void roll(float angle);
     void pitch(float angle);
 
@@ -20,11 +26,15 @@ public:
     void move_right(float value);
 
     void move_forward(float value);
-    void move_back(float value);
+    void move_back(float value);*/
+
+public:
+    const D3DXMATRIX*  get_view_matrix() const;
+    const D3DXMATRIX*  get_proj_matrix() const;
+    const D3DXVECTOR3* get_eye() const;
 
 private:
 
-private:
     bool m_is_moved;
 };
 
