@@ -26,8 +26,11 @@ if(USE_BOOST)
 	option(Boost_USE_MULTITHREADED  "Set to OFF to use the non-multithreaded libraries ('mt' tag).  Default is ON." ON)  
 	option(Boost_USE_STATIC_RUNTIME "Set to ON or OFF to specify whether to use libraries linked statically to the C++ runtime ('s' tag).  Default is platform dependent." ON)
 	set(Boost_components
+		program_options
 		filesystem
 		#lockfree # only boost 1.59
+		fusion
+		spirit
 		system
 		thread
 		chrono

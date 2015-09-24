@@ -2,6 +2,15 @@
 #include "app.hxx"
 #include <fstream>
 
+struct VERTEX{ FLOAT x, y, z; D3DXCOLOR color; };
+
+struct ConstantBuffer
+{
+    DirectX::XMMATRIX mWorld;
+    DirectX::XMMATRIX mView;
+    DirectX::XMMATRIX mProjection;
+};
+
 DXDevice::DXDevice()
 : m_device(NULL)
 , m_device_context(NULL)
@@ -9,6 +18,48 @@ DXDevice::DXDevice()
 , m_swap_chain(NULL)
 {}
 DXDevice::~DXDevice(){this->release();}
+
+void DXDevice::initialize_dx_device(DXGI_SWAP_CHAIN_DESC& swap_chain_desc)
+{
+    m_driver_type = D3D_DRIVER_TYPE_HARDWARE;
+    UINT createDeviceFlags = 0;
+#if _DEBUG
+    createDeviceFlags = D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+    D3D_FEATURE_LEVEL feature_levels[] =
+    {
+        D3D_FEATURE_LEVEL_11_0,
+        D3D_FEATURE_LEVEL_10_1,
+        D3D_FEATURE_LEVEL_10_0,
+        D3D_FEATURE_LEVEL_9_3,
+        D3D_FEATURE_LEVEL_9_2,
+        D3D_FEATURE_LEVEL_9_1
+    };
+
+    D3D_FEATURE_LEVEL       featureLevel;
+
+    HRESULT hr = D3D11CreateDeviceAndSwapChain
+        (nullptr
+        , m_driver_type
+        , nullptr
+        , createDeviceFlags
+        , feature_levels
+        , _countof(feature_levels)
+        , D3D11_SDK_VERSION
+        , &swap_chain_desc
+        , &m_swap_chain
+        , &m_device
+        , &featureLevel
+        , &m_device_context);
+    assert(hr == S_OK);
+
+    ID3D11Texture2D* p_back_buffer = NULL;
+    hr = m_swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&p_back_buffer);
+    assert(hr == S_OK);
+    hr = m_device->CreateRenderTargetView(p_back_buffer, NULL, &m_render_target_view);
+    assert(hr == S_OK);
+}
 
 void DXDevice::initialize(HWND hwnd, int w, int h, bool is_fullscreen)
 {
@@ -29,44 +80,7 @@ void DXDevice::initialize(HWND hwnd, int w, int h, bool is_fullscreen)
     sd.SampleDesc.Quality = 0;
     sd.Windowed = !is_fullscreen;
 
-    m_driver_type = D3D_DRIVER_TYPE_HARDWARE;
-    UINT createDeviceFlags = 0;
-#if _DEBUG
-    createDeviceFlags = D3D11_CREATE_DEVICE_DEBUG;
-#endif
-
-    D3D_FEATURE_LEVEL feature_levels[] =
-    {
-        D3D_FEATURE_LEVEL_11_0,
-        D3D_FEATURE_LEVEL_10_1,
-        D3D_FEATURE_LEVEL_10_0,
-        D3D_FEATURE_LEVEL_9_3,
-        D3D_FEATURE_LEVEL_9_2,
-        D3D_FEATURE_LEVEL_9_1
-    };
-
-    D3D_FEATURE_LEVEL       featureLevel;
-
-    HRESULT hr = D3D11CreateDeviceAndSwapChain
-        ( nullptr
-        , m_driver_type
-        , nullptr
-        , createDeviceFlags
-        , feature_levels
-        , _countof(feature_levels)
-        , D3D11_SDK_VERSION
-        , &sd
-        , &m_swap_chain
-        , &m_device
-        , &featureLevel
-        , &m_device_context);
-    assert(hr == S_OK);
-
-    ID3D11Texture2D* p_back_buffer = NULL;
-    hr = m_swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&p_back_buffer);
-    assert(hr == S_OK);
-    hr = m_device->CreateRenderTargetView(p_back_buffer, NULL, &m_render_target_view);
-    assert(hr == S_OK);
+    initialize_dx_device(sd);
     create_depth_stencil_buffer();
 
     D3D11_VIEWPORT viewport = {};
@@ -75,44 +89,35 @@ void DXDevice::initialize(HWND hwnd, int w, int h, bool is_fullscreen)
     viewport.Width = (FLOAT)w;
     viewport.Height = (FLOAT)h;
 
-    m_device_context->RSSetViewports(1, &viewport);
-    m_device_context->OMSetDepthStencilState(m_depth_stencil_state, 1);
-    m_device_context->OMSetRenderTargets(1, &m_render_target_view, m_depth_stencil_view);
-
     create_pixel_shader();
     create_vertex_shader();
 
     create_vertex_buffer();
     create_index_buffer();
-    create_matrices();
     create_constant_buffer();
+
+    m_device_context->RSSetViewports(1, &viewport);
+    m_device_context->OMSetDepthStencilState(m_depth_stencil_state, 1);
+    m_device_context->OMSetRenderTargets(1, &m_render_target_view, m_depth_stencil_view);
+
+    create_matrices();
     create_input_layout();
 
-    m_device_context->PSSetShader(m_pixel_shader, nullptr, 0);
-    m_device_context->VSSetShader(m_vertex_shader, nullptr, 0);
-
-    unsigned int zero = 0;
-    unsigned int stride = 12;
-    m_device_context->IASetVertexBuffers(0, 1, &m_vertex_buffer, &stride, &zero);
-    m_device_context->IASetIndexBuffer(m_index_buffer, DXGI_FORMAT_R32_UINT, 0);
-    m_device_context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    ID3D11RasterizerState * g_pRasterState;
-
-    D3D11_RASTERIZER_DESC rasterizerState;
-    rasterizerState.FillMode = D3D11_FILL_SOLID;
-    rasterizerState.CullMode = D3D11_CULL_NONE;
-    rasterizerState.FrontCounterClockwise = true;
-    rasterizerState.DepthBias = false;
-    rasterizerState.DepthBiasClamp = 0;
-    rasterizerState.SlopeScaledDepthBias = 0;
-    rasterizerState.DepthClipEnable = false;
-    rasterizerState.ScissorEnable = false;
-    rasterizerState.MultisampleEnable = false;
-    rasterizerState.AntialiasedLineEnable = false;
-    hr = m_device->CreateRasterizerState(&rasterizerState, &g_pRasterState);
-    assert(hr == S_OK);
-    m_device_context->RSSetState(g_pRasterState);
+    //ID3D11RasterizerState * g_pRasterState;
+    //D3D11_RASTERIZER_DESC rasterizerState;
+    //rasterizerState.FillMode = D3D11_FILL_SOLID;
+    //rasterizerState.CullMode = D3D11_CULL_NONE;
+    //rasterizerState.FrontCounterClockwise = true;
+    //rasterizerState.DepthBias = false;
+    //rasterizerState.DepthBiasClamp = 0;
+    //rasterizerState.SlopeScaledDepthBias = 0;
+    //rasterizerState.DepthClipEnable = false;
+    //rasterizerState.ScissorEnable = false;
+    //rasterizerState.MultisampleEnable = false;
+    //rasterizerState.AntialiasedLineEnable = false;
+    //hr = m_device->CreateRasterizerState(&rasterizerState, &g_pRasterState);
+    //assert(hr == S_OK);
+    //m_device_context->RSSetState(g_pRasterState);
 }
 
 void DXDevice::release()
@@ -145,9 +150,20 @@ void DXDevice::render()
 {
     float ClearColor[4] = { 1.0f, 0.0f, 0.3f, 1.0f };
     m_device_context->ClearRenderTargetView(m_render_target_view, ClearColor);
+    m_device_context->ClearDepthStencilView(m_depth_stencil_view, D3D11_CLEAR_DEPTH, 1.0f, 0);
     // begin
 
-    m_device_context->DrawIndexed(12*3, 0, 0);
+    ConstantBuffer cb;
+    cb.mWorld = DirectX::XMMatrixTranspose(m_world);
+    cb.mView = DirectX::XMMatrixTranspose(m_view);
+    cb.mProjection = DirectX::XMMatrixTranspose(m_projection);
+    m_device_context->UpdateSubresource(m_constant_buffer, 0, NULL, &cb, 0, 0);
+
+    m_device_context->VSSetShader(m_vertex_shader, nullptr, 0);
+    m_device_context->VSSetConstantBuffers(0, 1, &m_constant_buffer);
+    m_device_context->PSSetShader(m_pixel_shader, nullptr, 0);
+
+    m_device_context->DrawIndexed(36, 0, 0);
 
     // end
     m_swap_chain->Present(0, 0);
@@ -201,21 +217,25 @@ void DXDevice::create_vertex_shader()
 
 void DXDevice::create_matrices()
 {
-    m_view = DirectX::XMMatrixTranslation(0.0f, 0.0f, -1.0f);
+    DirectX::XMVECTOR eye = DirectX::XMVectorSet(0.0f, 1.0f, -5.0f, 0.0f);
+    DirectX::XMVECTOR at = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+    DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+    m_view = DirectX::XMMatrixLookAtLH(eye, at, up);
     m_world = DirectX::XMMatrixIdentity();
-    m_projection = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, (float)m_display_size.x / m_display_size.y, 1.0f, 1000.0f);
+    m_projection = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, (float)m_display_size.x / m_display_size.y, 0.01f, 100.0f);
 }
 
 void DXDevice::create_constant_buffer()
 {
-    /*D3D11_BUFFER_DESC desc = {};
-    desc.ByteWidth = sizeof(DirectX::XMMATRIX)*3;
-    desc.Usage = D3D11_USAGE_DYNAMIC;
-    desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    /*m_device_context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    D3D11_SUBRESOURCE_DATA data = {};
-    data.pSysMem*/
+    D3D11_BUFFER_DESC bd;
+    bd.Usage = D3D11_USAGE_DEFAULT;
+    bd.ByteWidth = sizeof(ConstantBuffer);
+    bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    bd.CPUAccessFlags = 0;
+    HRESULT hr = m_device->CreateBuffer(&bd, NULL, &m_constant_buffer);
+    assert(FAILED(hr));*/
 }
 
 void DXDevice::create_vertex_buffer()
@@ -234,18 +254,21 @@ void DXDevice::create_vertex_buffer()
     vertices[7] = DirectX::XMFLOAT3(0.5f, 0.0f, -0.5f);
 
     // vertex buffer
-    D3D11_BUFFER_DESC desc;
-    ZeroMemory(&desc, sizeof(D3D11_BUFFER_DESC));
-    desc.ByteWidth = sizeof(vertices);
-    desc.Usage = D3D11_USAGE_DEFAULT;
-    desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    D3D11_BUFFER_DESC bd;
+    ZeroMemory(&bd, sizeof(D3D11_BUFFER_DESC));
+    bd.ByteWidth = sizeof(vertices);
+    bd.Usage = D3D11_USAGE_DEFAULT;
+    bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
     D3D11_SUBRESOURCE_DATA data;
-    ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
+    ZeroMemory(&data, sizeof(data));
     data.pSysMem = &vertices;
-    const HRESULT result = m_device->CreateBuffer(&desc, &data, &m_vertex_buffer);
+    const HRESULT result = m_device->CreateBuffer(&bd, &data, &m_vertex_buffer);
     assert(result == S_OK);
 
+    unsigned int zero = 0;
+    unsigned int stride = 12;
+    m_device_context->IASetVertexBuffers(0, 1, &m_vertex_buffer, &stride, &zero);
 }
 
 void DXDevice::create_index_buffer()
@@ -287,6 +310,8 @@ void DXDevice::create_index_buffer()
 
     const HRESULT result = m_device->CreateBuffer(&desc, &data, &m_index_buffer);
     assert(result == S_OK);
+
+    m_device_context->IASetIndexBuffer(m_index_buffer, DXGI_FORMAT_R32_UINT, 0);
 }
 
 void DXDevice::create_input_layout()
