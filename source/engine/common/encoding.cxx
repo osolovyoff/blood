@@ -133,6 +133,54 @@ std::wstring blood::fn::text::replace(std::wstring& in, const std::wstring& from
     return in;
 }
 
+std::pair<std::string, std::string> blood::fn::text::split_string_to_two_part(std::string in, const char symbol)
+{
+    std::pair<std::string, std::string> pair;
+    const size_t pos = in.find(symbol);
+    if (pos != in.npos)
+    {
+        bool left_sep_sym = false;
+        for (const auto& sym : in)
+        {
+            if (sym == symbol)
+            {
+                left_sep_sym = true;
+                continue;
+            }
+
+            if (left_sep_sym)
+                pair.second += sym;
+            else
+                pair.first += sym;
+        }
+    }
+    return pair;
+}
+
+std::pair<std::wstring, std::wstring> blood::fn::text::split_string_to_two_part(std::wstring in, const wchar_t symbol)
+{
+    std::pair<std::wstring, std::wstring> pair;
+    const size_t pos = in.find(symbol);
+    if (pos != in.npos)
+    {
+        bool left_sep_sym = false;
+        for (const auto& sym : in)
+        {
+            if (sym == symbol)
+            {
+                left_sep_sym = true;
+                continue;
+            }
+
+            if (left_sep_sym)
+                pair.second += sym;
+            else
+                pair.first += sym;
+        }
+    }
+    return pair;
+}
+
 std::string blood::fn::text::string_format(const std::string format, ...)
 {
     int final_n, n = ((int)format.size()) * 2; /* Reserve two times as much as the length of the fmt_str */
