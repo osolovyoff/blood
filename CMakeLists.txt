@@ -8,7 +8,7 @@ set(project_name vbloodv)
 project(${project_name})
 # _________________________________________ Options
 
-option(ADDRESS_MODEL_64 "Build x64 platform"                            ON)
+option(ADDRESS_MODEL_64 "Build x64 platform"                            OFF)
 option(STORE            "Create Windows 8.1 or more; Store application" OFF)
 option(BUILD_LIBRARY    "Switcher between library and executable"       OFF)
 
@@ -18,7 +18,7 @@ option(USE_BOOST   "" OFF)
 option(USE_CURL    "" OFF)
 option(USE_OPENCV  "" OFF)
 option(USE_OPENSSL "" OFF)
-option(USE_DIRECTX "" ON)
+option(USE_DIRECTX "" OFF)
 option(USE_OCULUS  "" OFF)
 
 if(USE_BOOST)
