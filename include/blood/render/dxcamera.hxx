@@ -2,6 +2,8 @@
 #ifndef BLOOD_DXCAMERA
 #define BLOOD_DXCAMERA
 
+#ifdef USE_DIRECTX
+
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <d3dx9math.h>
@@ -39,3 +41,4 @@ private:
 };
 
 #endif // BLOOD_DXCAMERA
+#endif // USE_DIRECTX

@@ -1,6 +1,13 @@
-#include "dxdevice.hxx"
-#include "app.hxx"
+#ifdef USE_DIRECTX
+
+#include "../../../include/blood/render/dxdevice.hxx"
 #include <fstream>
+
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "d3dx11d.lib")
+#pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "d3dcompiler.lib")
+#pragma comment(lib, "winmm.lib")
 
 struct VERTEX{ FLOAT x, y, z; D3DXCOLOR color; };
 
@@ -371,3 +378,5 @@ void DXDevice::create_depth_stencil_buffer()
         , &descDSV // Depth stencil desc
         , &m_depth_stencil_view );
 }
+
+#endif // USE_DIRECTX
