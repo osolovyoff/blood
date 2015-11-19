@@ -1,3 +1,4 @@
+import os
 import cmake
 
 cmake.buildCmake(
@@ -5,3 +6,6 @@ cmake.buildCmake(
     '../../',
     '../../assemble/'
 )
+
+os.chdir("../../assemble/UnixMake/")
+os.system("make -j")

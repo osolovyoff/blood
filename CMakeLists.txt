@@ -16,9 +16,10 @@ set(project_name vbloodv)
 project(${project_name})
 # _________________________________________ Options
 
-option(ADDRESS_MODEL_64 "Build x64 platform"                            OFF)
-option(STORE            "Create Windows 8.1 or more; Store application" OFF)
-option(BUILD_LIBRARY    "Switcher between library and executable"       OFF)
+option(ADDRESS_MODEL_64 "Build x64 platform"                              OFF)
+option(STORE            "Create Windows 8.1 or more; Store application"   OFF)
+option(BUILD_LIBRARY    "Switcher between library and executable"         OFF)
+option(RASPBERRY        "Raspbian is official supported Operating System" ON)
 
 # _________________________________________ Use technology
 
@@ -75,10 +76,10 @@ add_library(blood STATIC ${BLOOD_SOURCES_FILES})
 
 file(GLOB PROJECT_CODE "${BLOOD_ROOT}/source/code/*.*")
 source_group("" FILES ${PROJECT_CODE})
-add_executable(${project_name} ${PROJECT_CODE})
+#add_executable(${project_name} ${PROJECT_CODE})
 submodule_link_dependence()
 
 # _________________________________________ Set targets
 set_target_properties(blood           PROPERTIES LINKER_LANGUAGE C++)
-set_target_properties(${project_name} PROPERTIES LINKER_LANGUAGE C++)
+#set_target_properties(${project_name} PROPERTIES LINKER_LANGUAGE C++)
 #target_link_libraries(${project_name} blood)
