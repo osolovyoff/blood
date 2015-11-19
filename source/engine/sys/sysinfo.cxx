@@ -8,7 +8,7 @@ unsigned int SystemInfo::getHardwareConcurrency()
 
 std::string SystemInfo::getCurrentPath()
 {
-#if defined(BLOOD_VS) || defined(BLOOD_32)
+#if defined(WIN32) || defined(MSVS)
     return SystemInfoWin::getCurrPath();
 #else
     return SystemInfoNix::getCurrPath();

@@ -1,4 +1,7 @@
 #pragma once
+#ifndef blood_render_dxdevice_hxx_
+#define blood_render_dxdevice_hxx_
+
 #ifdef USE_DIRECTX
 
 #include <memory>
@@ -68,3 +71,5 @@ private:
 };
 
 #endif USE_DIRECTX
+
+#endif // blood_render_dxdevice_hxx_

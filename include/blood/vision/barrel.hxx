@@ -1,4 +1,7 @@
 #pragma once
+#ifndef blood_vision_barrel_hxx_
+#define blood_vision_barrel_hxx_
+
 #if defined(USE_OPENCV)
 #include <opencv/cv.hpp>
 
@@ -34,3 +37,5 @@ private:
 };
 
 #endif // end USE_OPENCV
+
+#endif // blood_vision_barrel_hxx_

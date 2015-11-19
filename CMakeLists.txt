@@ -1,5 +1,13 @@
 cmake_minimum_required(VERSION 3.0)
-
+#------------------------------------------------------------------------------
+# PLATFORM LIST:
+# |- WIN32
+# |-- SYGWIN
+# |-- MINGW
+# |-- MSVC
+# |--- STORE
+# | UNIX
+#------------------------------------------------------------------------------
 include(assemble/cmake/parse.cmake)
 include(assemble/cmake/submodule.cmake)
 include(assemble/cmake/configuration.cmake)
@@ -73,4 +81,4 @@ submodule_link_dependence()
 # _________________________________________ Set targets
 set_target_properties(blood           PROPERTIES LINKER_LANGUAGE C++)
 set_target_properties(${project_name} PROPERTIES LINKER_LANGUAGE C++)
-target_link_libraries(${project_name} blood)
+#target_link_libraries(${project_name} blood)

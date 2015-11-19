@@ -1,4 +1,7 @@
 #pragma once
+#ifndef blood_net_network_hxx_
+#define blood_net_network_hxx_
+
 #include "ip.hxx"
 #include "mask.hxx"
 #include <vector>
@@ -41,3 +44,5 @@ private:
 };
 
 }} // blood::net
+
+#endif // blood_net_network_hxx_

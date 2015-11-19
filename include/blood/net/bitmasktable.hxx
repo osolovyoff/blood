@@ -1,6 +1,6 @@
 #pragma once
-#ifndef bit_mask_table_h__
-#define bit_mask_table_h__
+#ifndef blood_net_bit_mask_table_h__
+#define blood_net_bit_mask_table_h__
 
 #include <map>
 #include <string>
@@ -82,4 +82,4 @@ namespace blood { namespace net {
 
 }} // end blood::net
 
-#endif // bit_mask_table_h__
+#endif // blood_net_bit_mask_table_h__

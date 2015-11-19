@@ -1,6 +1,14 @@
 #include "../../../include/blood/common/input.hxx"                                   
 
+#ifdef WIN32
 #include <conio.h>
+#endif
+
+#ifdef UNIX
+#include <termios.h>
+#include <unistd.h>
+#endif
+
 #include <iostream>
 
 std::string blood::fn::input::get_string()
@@ -52,10 +60,10 @@ void blood::fn::input::press_any_keys()
 
 char blood::fn::input::getch()
 {
-#if defined(BLOOD_32) || defined(BLOOD_VS)
+#if defined(WIN32) || defined(MSVS)
     return _getch();
 #endif // end BLOOD_VS
-#if defined(BLOOD_UNIX)
+#if defined(UNIX)
     struct termios oldattr, newattr;
     int ch;
     tcgetattr(STDIN_FILENO, &oldattr);

@@ -1,4 +1,7 @@
 #pragma once
+#ifndef blood_net_ftp_hxx_
+#define blood_net_ftp_hxx_
+
 #if defined(USE_CURL)
 
 #include <curl/curl.h>
@@ -42,3 +45,4 @@ private:
 } } // end blood::net
 
 #endif // end USE_CURL
+#endif // blood_net_ftp_hxx_

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef blood_gui_window_freeglut_hxx_
+#define blood_gui_window_freeglut_hxx_
 
 #if defined(USE_FREEGLUT)
 #include <string>
@@ -42,5 +44,7 @@ private:
 };
 
 }} // end blood::sys
+
+#endif//blood_gui_window_freeglut_hxx_
 
 #endif

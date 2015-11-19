@@ -1,4 +1,7 @@
 #pragma once
+#ifndef blood_parse_ini_hxx_
+#define blood_parse_ini_hxx_
+
 #include <map>
 #include <vector>
 
@@ -23,8 +26,8 @@ public:
     int         getNumericValue(const std::string& _key) const;
     int         getNumericValue(const char* _key) const;
 
-    void        setValue(const std::string& _key, const std::string& _value);
-    void        setValue(const std::string& _key, const char* _value);
+    void        setValue(const std::string _key, const std::string& _value);
+    void        setValue(const std::string _key, const char* _value);
     void        setValue(const char* _key, const std::string& _value);
     void        setValue(const char* _key, const char* _value);
 
@@ -35,11 +38,14 @@ private:
     wordpair findValue(const char* _key);
 
 private:
-    std::vector<wordpair> m_data;
-    std::string           m_path;
+    std::vector<wordpair>              m_data;
+    std::string                        m_path;
+    std::pair<std::string,std::string> m_empty;
 
 public:
     const int ERROR_NUMERIC = 2147483646;
 };
 
 }} // end blood::parse
+
+#endif // blood_parse_ini_hxx_

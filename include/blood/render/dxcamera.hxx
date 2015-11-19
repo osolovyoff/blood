@@ -1,6 +1,6 @@
 #pragma once
-#ifndef BLOOD_DXCAMERA
-#define BLOOD_DXCAMERA
+#ifndef blood_render_dxcamera_hxx_
+#define blood_render_dxcamera_hxx_
 
 #ifdef USE_DIRECTX
 
@@ -40,5 +40,5 @@ private:
     bool m_is_moved;
 };
 
-#endif // BLOOD_DXCAMERA
+#endif // blood_render_dxcamera_hxx_
 #endif // USE_DIRECTX

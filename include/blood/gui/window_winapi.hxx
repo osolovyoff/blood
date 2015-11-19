@@ -1,5 +1,8 @@
 #pragma once
-#if defined(BLOOD_VS) || defined(BLOOD_32)
+#ifndef blood_gui_window_winapi_hxx_
+#define blood_gui_window_winapi_hxx_
+
+#if defined(MSVS) || defined(WIN32)
 
 #include <windows.h>
 #include <memory>
@@ -44,4 +47,5 @@ private:
 };
 
 }} // end blood::system
-#endif
+#endif // USE_MSVS && USE_WIN32
+#endif // blood_gui_window_winapi_hxx_

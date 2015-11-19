@@ -1,4 +1,7 @@
 #include "../../../include/blood/gui/window_winapi.hxx"
+
+#ifdef WIN32
+
 #include <exception>
 #include <windows.h>
 #include <winuser.h>
@@ -149,3 +152,5 @@ POINT blood::gui::WindowWinApi::get_display_center()
     const POINT point = { center_x, center_y };
     return point;
 }
+
+#endif // WIN32
