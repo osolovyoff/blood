@@ -37,16 +37,12 @@ if(USE_BOOST)
 	set(Boost_components
 		program_options
 		filesystem
-<<<<<<< HEAD
+		date_time
 		regex
 		asio
-=======
-		date_time
->>>>>>> 6a077ffb17f1e1ff1362c0b24ecfcbb6e3e0cf8c
 		#lockfree # only boost 1.59
 		#fusion
 		#spirit
-		regex
 		system
 		thread
 		chrono
@@ -76,36 +72,25 @@ parse_add_source_groups()
 # _________________________________________ Processing
 
 if(DEFINED ENV{PI_TOOLS_HOME})
-  message("Using Raspberry Pi Tools found in $ENV{PI_TOOLS_HOME}")
+	message("Using Raspberry Pi Tools found in $ENV{PI_TOOLS_HOME}")
 else()
-  message("PI_TOOLS_HOME is not set; You must tell CMake where to find Raspberry Pi Tools (cross-compiler)")
-  return()
+	message("PI_TOOLS_HOME is not set; You must tell CMake where to find Raspberry Pi Tools (cross-compiler)")
+	return()
 endif()
 
 
 include_directories(${BLOOD_INCLUDES} ${BLOOD_ROOT}/include/)
 link_directories(${BLOOD_LIBRARIES})
 
-if(not RASPBERRY)
-	add_library(blood STATIC ${BLOOD_SOURCES_FILES})
-	# _________________________________________ Create template project ${project_name}
-	file(GLOB PROJECT_CODE "${BLOOD_ROOT}/source/code/*.*")
-	source_group("" FILES ${PROJECT_CODE})
-	add_executable(${project_name} ${PROJECT_CODE})
-	submodule_link_dependence()
-	# _________________________________________ Set targets
-	set_target_properties(blood           PROPERTIES LINKER_LANGUAGE C++)
-	set_target_properties(${project_name} PROPERTIES LINKER_LANGUAGE C++)
-	target_link_libraries(${project_name} blood)
-else()
+add_library(blood STATIC ${BLOOD_SOURCES_FILES})
 
-endif()
+# _________________________________________ Create template project ${project_name}
+file(GLOB PROJECT_CODE "${BLOOD_ROOT}/source/code/*.*")
+source_group("" FILES ${PROJECT_CODE})
+add_executable(${project_name} ${PROJECT_CODE})
+submodule_link_dependence()
 
-
-<<<<<<< HEAD
 # _________________________________________ Set targets
 set_target_properties(blood           PROPERTIES LINKER_LANGUAGE C++)
-#set_target_properties(${project_name} PROPERTIES LINKER_LANGUAGE C++)
-#target_link_libraries(${project_name} blood)
-=======
->>>>>>> 6a077ffb17f1e1ff1362c0b24ecfcbb6e3e0cf8c
+set_target_properties(${project_name} PROPERTIES LINKER_LANGUAGE C++)
+target_link_libraries(${project_name} blood)
