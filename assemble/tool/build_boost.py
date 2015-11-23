@@ -9,7 +9,7 @@ runtime = 'static'   #
 threading = 'multi'  # single|multi
 
 address_model = '64' # 32|64|32_64
-build_type = 'complete'
+build_type = 'stage' # complete|stage
 toolset = 'msvc-12.0'
 
 
