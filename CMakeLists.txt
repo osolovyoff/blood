@@ -28,6 +28,8 @@ if(USE_BOOST)
 	set(Boost_components
 		program_options
 		filesystem
+		regex
+		asio
 		#lockfree # only boost 1.59
 		fusion
 		spirit
