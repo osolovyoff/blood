@@ -16,7 +16,7 @@ set(project_name vbloodv)
 project(${project_name})
 # _________________________________________ Options
 
-option(ADDRESS_MODEL_64 "Build x64 platform"                              OFF)
+option(ADDRESS_MODEL_64 "Build x64 platform"                              ON)
 option(STORE            "Create Windows 8.1 or more; Store application"   OFF)
 option(BUILD_LIBRARY    "Switcher between library and executable"         OFF)
 option(RASPBERRY        "Raspbian is official supported Operating System" ON)
@@ -37,9 +37,11 @@ if(USE_BOOST)
 	set(Boost_components
 		program_options
 		filesystem
+		date_time
 		#lockfree # only boost 1.59
-		fusion
-		spirit
+		#fusion
+		#spirit
+		regex
 		system
 		thread
 		chrono
@@ -68,18 +70,30 @@ parse_add_source_groups()
 
 # _________________________________________ Processing
 
+if(DEFINED ENV{PI_TOOLS_HOME})
+  message("Using Raspberry Pi Tools found in $ENV{PI_TOOLS_HOME}")
+else()
+  message("PI_TOOLS_HOME is not set; You must tell CMake where to find Raspberry Pi Tools (cross-compiler)")
+  return()
+endif()
+
+
 include_directories(${BLOOD_INCLUDES} ${BLOOD_ROOT}/include/)
 link_directories(${BLOOD_LIBRARIES})
 
-add_library(blood STATIC ${BLOOD_SOURCES_FILES})
-# _________________________________________ Create template project ${project_name}
+if(not RASPBERRY)
+	add_library(blood STATIC ${BLOOD_SOURCES_FILES})
+	# _________________________________________ Create template project ${project_name}
+	file(GLOB PROJECT_CODE "${BLOOD_ROOT}/source/code/*.*")
+	source_group("" FILES ${PROJECT_CODE})
+	add_executable(${project_name} ${PROJECT_CODE})
+	submodule_link_dependence()
+	# _________________________________________ Set targets
+	set_target_properties(blood           PROPERTIES LINKER_LANGUAGE C++)
+	set_target_properties(${project_name} PROPERTIES LINKER_LANGUAGE C++)
+	target_link_libraries(${project_name} blood)
+else()
 
-file(GLOB PROJECT_CODE "${BLOOD_ROOT}/source/code/*.*")
-source_group("" FILES ${PROJECT_CODE})
-#add_executable(${project_name} ${PROJECT_CODE})
-submodule_link_dependence()
+endif()
 
-# _________________________________________ Set targets
-set_target_properties(blood           PROPERTIES LINKER_LANGUAGE C++)
-#set_target_properties(${project_name} PROPERTIES LINKER_LANGUAGE C++)
-#target_link_libraries(${project_name} blood)
+
