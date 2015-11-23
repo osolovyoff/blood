@@ -153,18 +153,18 @@ bool INI::isLineBeSkipped(const std::string& _string)
     }
 }
 
-void INI::setValue(const std::string& _key, const std::string& _value)
+void INI::setValue(const std::string _key, const std::string& _value)
 {
-    std::pair<std::string,std::string>& s = findValue(_key.c_str());
+    std::pair<std::string,std::string> s = findValue(_key.c_str());
     if (s.first.empty())
         m_data.emplace_back(_key, _value);
     else
         s = std::make_pair(_key, _value);
 }
 
-void INI::setValue(const std::string& _key, const char* _value)
+void INI::setValue(const std::string _key, const char* _value)
 {
-    std::pair<std::string, std::string>& s = findValue(_key.c_str());
+    std::pair<std::string, std::string> s = findValue(_key.c_str());
     if (s.first.empty())
         m_data.emplace_back(_key, _value);
     else
@@ -173,7 +173,7 @@ void INI::setValue(const std::string& _key, const char* _value)
 
 void INI::setValue(const char* _key, const std::string& _value)
 {
-    std::pair<std::string, std::string>& s = findValue(_key);
+    std::pair<std::string, std::string> s = findValue(_key);
     if (s.first.empty())
         m_data.emplace_back(_key, _value);
     else
@@ -182,7 +182,7 @@ void INI::setValue(const char* _key, const std::string& _value)
 
 void INI::setValue(const char* _key, const char* _value)
 {
-    std::pair<std::string, std::string>& s = findValue(_key);
+    std::pair<std::string, std::string> s = findValue(_key);
     if (s.first.empty())
         m_data.emplace_back(_key, _value);
     else
@@ -199,7 +199,7 @@ INI::wordpair INI::findValue(const char* _key)
         if (i.first.compare(_key) == 0)
             return i;
     }
-    return wordpair(std::string(), std::string());
+    return m_empty;
 }
 
 std::vector<blood::parse::INI::wordpair>& blood::parse::INI::getData()

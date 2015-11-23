@@ -1,11 +1,7 @@
-#include <memory>
-
-#include "app.hxx"
-std::unique_ptr<App> app;
-
 int main()
 {
-    app.reset(new App);
-    app->start();
+	/*
+	Puts your code here
+	*/
     return 0;
 }

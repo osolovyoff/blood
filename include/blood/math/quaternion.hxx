@@ -1,5 +1,6 @@
 #pragma once
-#ifndef BLOOD_QUATERNION_HXX
+#ifndef blood_quaternion_hxx_
+#define blood_quaternion_hxx_
 
 class Quaternion
 {
@@ -12,4 +13,4 @@ public:
 private:
 };
 
-#endif // BLOOD_QUATERNION_HXX
+#endif // blood_quaternion_hxx_

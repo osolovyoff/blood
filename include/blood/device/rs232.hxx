@@ -33,7 +33,7 @@
 
 /* For more info and how to use this libray, visit: http://www.teuniz.net/RS-232/ */
 
-
+#pragma once
 #ifndef rs232_INCLUDED
 #define rs232_INCLUDED
 

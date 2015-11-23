@@ -1,6 +1,8 @@
-#if defined(BLOOD_UNIX)
-#include "common.hxx"
+#include "../../../include/blood/sys/sysinfo_nix.hxx"
+
+#if defined(UNIX)
 #include <unistd.h>
+#include <string>
 
 std::string SystemInfoNix::getCurrPath()
 {
@@ -9,4 +11,4 @@ std::string SystemInfoNix::getCurrPath()
     return std::string(path);
 }
 
-#endif
+#endif // UNIX

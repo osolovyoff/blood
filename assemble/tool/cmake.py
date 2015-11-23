@@ -1,3 +1,29 @@
+'''
+Usage:
+	buildCmake( project_acronym, main_cmake_file, out_projects_folder )
+
+Project acronym:
+	VS2013              -> 'Visual Studio 12 2013' project
+	VS2013x64           -> 'Visual Studio 12 2013 Win64' project
+	VS2015              -> 'Visual Studio 12 2015' project
+	VS2015x64           -> 'Visual Studio 14 2015 Win64' project
+	VS2015ARM           -> 'Visual Studio 14 2015 ARM' project
+	UnixMake            -> 'Unix Makefiles' project
+	MinGW               -> 'MinGW Makefiles' project
+	CodeBlockMinGW      -> 'CodeBlocks - MinGw Makefiles' project
+	CodeBlockNMake      -> 'CodeBlocks - NMake Makefiles' project
+	CodeBlockNinja      -> 'CodeBlocks - Ninja' project
+	CodeBlockUnixMake   -> 'CodeBlocks - Unix Makefiles' project
+
+Main CMake file:
+	"../../"            -> for this project
+
+Out projects folder:
+	"../"               -> to your taste
+	"../projects/"
+	"../../assemble/"
+'''
+
 import os
 import shutil
 
@@ -24,8 +50,15 @@ def buildCmake(
     tool_name = getFullNameByAcronym(tool)
     build_project = os.path.join(projects, tool)
 
+    # project will be delete
+    if os.path.exists(build_project):
+        if os.path.isdir(build_project):
+            shutil.rmtree(build_project)
+
+    # project will be create
     if not os.path.exists(build_project):
         os.makedirs(build_project)
+
     os.chdir(build_project)
 
     command = "cmake"
@@ -67,3 +100,8 @@ def clear(out):
                 shutil.rmtree(path)
             else:
                 os.remove(path)
+
+def deleteFolder(path):
+    if os.path.exists(path):
+        if os.path.isdir(path):
+                shutil.rmtree(path)

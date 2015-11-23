@@ -1,4 +1,3 @@
-#pragma once
 #include "../../../include/blood/net/mask.hxx"
 
 namespace blood { namespace net {

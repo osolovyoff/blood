@@ -1,11 +1,3 @@
-function(submodule_connect_external_projects)
-	foreach(SUBMODULE ${SUBMODULE_FOLDERS})
-		add_subdirectory(${BLOOD_ROOT}/extern/${SUBMODULE}/ ${BLOOD_ROOT}/assemble/build/intermediate/${SUBMODULE}/)
-	endforeach()
-	message(STATUS "Connect libraries: ${SUBMODULE_FOLDERS}")
-	message(STATUS)
-endfunction()
-
 function(submodule_fill_technology_list)
 	if(USE_BOOST)
 		set(USE_DEFINITION ${USE_DEFINITION} USE_BOOST)
@@ -40,6 +32,13 @@ function(submodule_fill_technology_list)
 	set(SUBMODULE_FOLDERS ${SUBMODULE_FOLDERS} PARENT_SCOPE)	
 endfunction()
 
+function(submodule_connect_external_projects)
+	foreach(SUBMODULE ${SUBMODULE_FOLDERS})
+		add_subdirectory(${BLOOD_ROOT}/extern/${SUBMODULE}/ ${BLOOD_ROOT}/assemble/build/intermediate/${SUBMODULE}/)
+	endforeach()
+	message(STATUS "Connect libraries: ${SUBMODULE_FOLDERS}")
+	message(STATUS)
+endfunction()
 
 # BLOOD_INCLUDE   // directory for include files
 # BLOOD_LIBRARIES // directory for libraries 
@@ -75,7 +74,7 @@ function(submodule_set_include_directory)
 	endif()
 
 	set(BLOOD_LIBRARIES ${BLOOD_LIBRARIES} ${BLOOD_ROOT})
-	set(BLOOD_INCLUDES  ${BLOOD_INCLUDES}   PARENT_SCOPE)
+	set(BLOOD_INCLUDES  ${BLOOD_INCLUDES}  PARENT_SCOPE)
 	set(BLOOD_LIBRARIES ${BLOOD_LIBRARIES} PARENT_SCOPE)
 endfunction()
 

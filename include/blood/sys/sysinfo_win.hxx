@@ -2,8 +2,8 @@
 
 class SystemInfoWin
 {
-#if defined(BLOOD_32) || defined(BLOOD_VS) 
-public:
+#if defined(WIN32) || defined(MSVS) 
+public: 
     static std::string getUserName();
     static std::string getUserPath();
     static std::string getAppPath();

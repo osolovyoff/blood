@@ -1,6 +1,10 @@
 #pragma once
+#ifndef blood_net_ip_hxx_
+#define blood_net_ip_hxx_
+
 #include <string>
 #include <array>
+#include <math.h>
 
 #include "../../../include/blood/net/mask.hxx"
 
@@ -60,3 +64,5 @@ namespace Tool
 }
 
 }} // end blood::net
+
+#endif // blood_net_ip_hxx_

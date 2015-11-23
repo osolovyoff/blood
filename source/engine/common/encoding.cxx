@@ -1,8 +1,13 @@
 #include "../../../include/blood/common/encoding.hxx"
+
+#ifdef WIN32
+#include <windows.h>
+#endif // WIN32
+
 #include <sstream>
 #include <algorithm>
-#include <windows.h>
 #include <cstdarg>
+#include <cstring>
 #include <memory>
 
 
@@ -20,6 +25,7 @@ std::string blood::fn::text::convert_wstring_to_unicode(std::wstring in)
     return result;
 }
 
+#ifdef WIN32
 std::wstring blood::fn::text::convert_multybyte_to_wstring(std::string in)
 {
     std::wstring buffer;
@@ -31,6 +37,7 @@ std::wstring blood::fn::text::convert_multybyte_to_wstring(std::string in)
     }
     return buffer;
 }
+#endif // WIN32
 
 std::wstring blood::fn::text::convert_string_to_wstring(std::string in)
 {

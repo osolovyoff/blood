@@ -1,4 +1,8 @@
 #pragma once
+#ifndef blood_parse_arg_hxx_
+#define blood_parse_arg_hxx_
+
+#include <list>
 #include <vector>
 #include <string>
 #include <unordered_map>
@@ -64,3 +68,5 @@ private:
 };
 
 }} // end blood::parse
+
+#endif // blood_parse_arg_hxx_

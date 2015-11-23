@@ -1,4 +1,6 @@
 #pragma once
+#ifndef blood_parse_csv_hxx_
+#define blood_parse_csv_hxx_
 
 #include <memory>
 #include <string>
@@ -30,3 +32,5 @@ private:
 };
 
 }} // end blood::parse
+
+#endif // blood_parse_arg_hxx_

@@ -1,15 +1,16 @@
 #pragma once
+#ifndef blood_render_dxdevice_hxx_
+#define blood_render_dxdevice_hxx_
+
+#ifdef USE_DIRECTX
+
 #include <memory>
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <d3dx9math.h>
 #include <directxmath.h>
 #include <directxcolors.h>
-#pragma comment(lib, "d3d11.lib")
-#pragma comment(lib, "d3dx11d.lib")
-#pragma comment(lib, "dxgi.lib")
-#pragma comment(lib, "d3dcompiler.lib")
-#pragma comment(lib, "winmm.lib")
+
 
 class DXDevice
 {
@@ -68,3 +69,7 @@ private:
     char*                   m_pixel_shader_content;
     size_t                  m_pixel_shader_size;
 };
+
+#endif USE_DIRECTX
+
+#endif // blood_render_dxdevice_hxx_

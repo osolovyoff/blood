@@ -1,3 +1,7 @@
+#pragma once
+#ifndef blood_pattern_non_copyable_hxx_
+#define blood_pattern_non_copyable_hxx_
+
 namespace blood { namespace pattern { 
 
 class NonCopyable
@@ -11,3 +15,5 @@ private:
 };
 
 }} // blood::pattern
+
+#endif // blood_pattern_non_copyable_hxx_

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef menu_h__
-#define menu_h__
+#ifndef blood_pattern_menu_hxx_
+#define blood_pattern_menu_hxx_
 
 #include <string>
 #include <functional>
@@ -43,4 +43,4 @@ private:
 
 }} // end blood::pattern
 
-#endif // menu_h__
+#endif // blood_pattern_menu_hxx_

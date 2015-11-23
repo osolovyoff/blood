@@ -1,4 +1,7 @@
 #pragma once
+#ifndef blood_net_mask_hxx_
+#define blood_net_mask_hxx_
+
 #include <string>
 #include <map>
 
@@ -31,3 +34,5 @@ private:
 };
 
 }} // end blood::net
+
+#endif // blood_net_mask_hxx_

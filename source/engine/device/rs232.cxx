@@ -1,40 +1,4 @@
-/*
-***************************************************************************
-*
-* Author: Teunis van Beelen
-*
-* Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 Teunis van Beelen
-*
-* Email: teuniz@gmail.com
-*
-***************************************************************************
-*
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation version 2 of the License.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License along
-* with this program; if not, write to the Free Software Foundation, Inc.,
-* 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*
-***************************************************************************
-*
-* This version of GPL is at http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
-*
-***************************************************************************
-*/
-
-/* Last revision: January 10, 2015 */
-
-/* For more info and how to use this library, visit: http://www.teuniz.net/RS-232/ */
-
-                  
-#include "net/rs232.hxx"
+#include "../../../include/blood/device/rs232.hxx"                  
 
 using namespace blood::device::rs232;
 
@@ -56,7 +20,7 @@ char comports[38][16]={"/dev/ttyS0","/dev/ttyS1","/dev/ttyS2","/dev/ttyS3","/dev
                        "/dev/cuau0","/dev/cuau1","/dev/cuau2","/dev/cuau3",
                        "/dev/cuaU0","/dev/cuaU1","/dev/cuaU2","/dev/cuaU3"};
 
-int blood::net::rs232::RS232_OpenComport(int comport_number, int baudrate, const char *mode)
+int blood::device::rs232::RS232_OpenComport(int comport_number, int baudrate, const char *mode)
 {
   int baudr,
       status;
@@ -249,7 +213,7 @@ http://man7.org/linux/man-pages/man3/termios.3.html
 }
 
 
-int blood::net::rs232::RS232_PollComport(int comport_number, unsigned char *buf, int size)
+int blood::device::rs232::RS232_PollComport(int comport_number, unsigned char *buf, int size)
 {
   int n;
 
@@ -259,7 +223,7 @@ int blood::net::rs232::RS232_PollComport(int comport_number, unsigned char *buf,
 }
 
 
-int blood::net::rs232::RS232_SendByte(int comport_number, unsigned char byte)
+int blood::device::rs232::RS232_SendByte(int comport_number, unsigned char byte)
 {
   int n;
 
@@ -270,13 +234,13 @@ int blood::net::rs232::RS232_SendByte(int comport_number, unsigned char byte)
 }
 
 
-int blood::net::rs232::RS232_SendBuf(int comport_number, unsigned char *buf, int size)
+int blood::device::rs232::RS232_SendBuf(int comport_number, unsigned char *buf, int size)
 {
   return(write(Cport[comport_number], buf, size));
 }
 
 
-void blood::net::rs232::RS232_CloseComport(int comport_number)
+void blood::device::rs232::RS232_CloseComport(int comport_number)
 {
   int status;
 
@@ -314,7 +278,7 @@ TIOCM_DSR       DSR (data set ready)
 http://man7.org/linux/man-pages/man4/tty_ioctl.4.html
 */
 
-int blood::net::rs232::RS232_IsDCDEnabled(int comport_number)
+int blood::device::rs232::RS232_IsDCDEnabled(int comport_number)
 {
   int status;
 
@@ -324,7 +288,7 @@ int blood::net::rs232::RS232_IsDCDEnabled(int comport_number)
   else return(0);
 }
 
-int blood::net::rs232::RS232_IsCTSEnabled(int comport_number)
+int blood::device::rs232::RS232_IsCTSEnabled(int comport_number)
 {
   int status;
 
@@ -334,7 +298,7 @@ int blood::net::rs232::RS232_IsCTSEnabled(int comport_number)
   else return(0);
 }
 
-int blood::net::rs232::RS232_IsDSREnabled(int comport_number)
+int blood::device::rs232::RS232_IsDSREnabled(int comport_number)
 {
   int status;
 
@@ -344,7 +308,7 @@ int blood::net::rs232::RS232_IsDSREnabled(int comport_number)
   else return(0);
 }
 
-void blood::net::rs232::RS232_enableDTR(int comport_number)
+void blood::device::rs232::RS232_enableDTR(int comport_number)
 {
   int status;
 
@@ -361,7 +325,7 @@ void blood::net::rs232::RS232_enableDTR(int comport_number)
   }
 }
 
-void blood::net::rs232::RS232_disableDTR(int comport_number)
+void blood::device::rs232::RS232_disableDTR(int comport_number)
 {
   int status;
 
@@ -378,7 +342,7 @@ void blood::net::rs232::RS232_disableDTR(int comport_number)
   }
 }
 
-void blood::net::rs232::RS232_enableRTS(int comport_number)
+void blood::device::rs232::RS232_enableRTS(int comport_number)
 {
   int status;
 
@@ -395,7 +359,7 @@ void blood::net::rs232::RS232_enableRTS(int comport_number)
   }
 }
 
-void blood::net::rs232::RS232_disableRTS(int comport_number)
+void blood::device::rs232::RS232_disableRTS(int comport_number)
 {
   int status;
 
@@ -427,7 +391,7 @@ char comports[16][10]={"\\\\.\\COM1",  "\\\\.\\COM2",  "\\\\.\\COM3",  "\\\\.\\C
 char mode_str[128];
 
 
-int blood::net::rs232::RS232_OpenComport(int comport_number, int baudrate, const char *mode)
+int blood::device::rs232::RS232_OpenComport(int comport_number, int baudrate, const char *mode)
 {
   if((comport_number>15)||(comport_number<0))
   {
@@ -579,7 +543,7 @@ http://technet.microsoft.com/en-us/library/cc732236.aspx
 }
 
 
-int blood::net::rs232::RS232_PollComport(int comport_number, unsigned char *buf, int size)
+int blood::device::rs232::RS232_PollComport(int comport_number, unsigned char *buf, int size)
 {
   int n;
 
@@ -592,7 +556,7 @@ int blood::net::rs232::RS232_PollComport(int comport_number, unsigned char *buf,
 }
 
 
-int blood::net::rs232::RS232_SendByte(int comport_number, unsigned char byte)
+int blood::device::rs232::RS232_SendByte(int comport_number, unsigned char byte)
 {
   int n;
 
@@ -604,7 +568,7 @@ int blood::net::rs232::RS232_SendByte(int comport_number, unsigned char byte)
 }
 
 
-int blood::net::rs232::RS232_SendBuf(int comport_number, unsigned char *buf, int size)
+int blood::device::rs232::RS232_SendBuf(int comport_number, unsigned char *buf, int size)
 {
   int n;
 
@@ -617,7 +581,7 @@ int blood::net::rs232::RS232_SendBuf(int comport_number, unsigned char *buf, int
 }
 
 
-void blood::net::rs232::RS232_CloseComport(int comport_number)
+void blood::device::rs232::RS232_CloseComport(int comport_number)
 {
   CloseHandle(Cport[comport_number]);
 }
@@ -626,7 +590,7 @@ void blood::net::rs232::RS232_CloseComport(int comport_number)
 http://msdn.microsoft.com/en-us/library/windows/desktop/aa363258%28v=vs.85%29.aspx
 */
 
-int blood::net::rs232::RS232_IsDCDEnabled(int comport_number)
+int blood::device::rs232::RS232_IsDCDEnabled(int comport_number)
 {
   int status;
 
@@ -637,7 +601,7 @@ int blood::net::rs232::RS232_IsDCDEnabled(int comport_number)
 }
 
 
-int blood::net::rs232::RS232_IsCTSEnabled(int comport_number)
+int blood::device::rs232::RS232_IsCTSEnabled(int comport_number)
 {
   int status;
 
@@ -648,7 +612,7 @@ int blood::net::rs232::RS232_IsCTSEnabled(int comport_number)
 }
 
 
-int blood::net::rs232::RS232_IsDSREnabled(int comport_number)
+int blood::device::rs232::RS232_IsDSREnabled(int comport_number)
 {
   int status;
 
@@ -659,25 +623,25 @@ int blood::net::rs232::RS232_IsDSREnabled(int comport_number)
 }
 
 
-void blood::net::rs232::RS232_enableDTR(int comport_number)
+void blood::device::rs232::RS232_enableDTR(int comport_number)
 {
   EscapeCommFunction(Cport[comport_number], SETDTR);
 }
 
 
-void blood::net::rs232::RS232_disableDTR(int comport_number)
+void blood::device::rs232::RS232_disableDTR(int comport_number)
 {
   EscapeCommFunction(Cport[comport_number], CLRDTR);
 }
 
 
-void blood::net::rs232::RS232_enableRTS(int comport_number)
+void blood::device::rs232::RS232_enableRTS(int comport_number)
 {
   EscapeCommFunction(Cport[comport_number], SETRTS);
 }
 
 
-void blood::net::rs232::RS232_disableRTS(int comport_number)
+void blood::device::rs232::RS232_disableRTS(int comport_number)
 {
   EscapeCommFunction(Cport[comport_number], CLRRTS);
 }
@@ -688,5 +652,5 @@ void blood::net::rs232::RS232_disableRTS(int comport_number)
 
 void RS232_cputs(int comport_number, const char *text)  /* sends a string to serial port */
 {
-  while(*text != 0) blood::net::rs232::RS232_SendByte(comport_number, *(text++));
+    while (*text != 0) blood::device::rs232::RS232_SendByte(comport_number, *(text++));
 }
