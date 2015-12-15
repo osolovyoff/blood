@@ -2,8 +2,14 @@
 #ifndef blood_register_h__
 #define blood_register_h__
 
-#include <windows.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 #include <string>
+#include <vector>
+
+#include <windows.h>
+#include <winnt.h>
 
 class Reg
 {
@@ -35,6 +41,8 @@ private: // additional
     std::string convert_bool_to_string(char* data, unsigned long size);
     std::string convert_dword_to_string(char* data, unsigned long size);
     std::string convert_qword_to_string(char* data, unsigned long size);
+
+    inline std::vector<std::string> split_string(std::string in, const char symbol);
 
 private:
     bool        m_is_open;

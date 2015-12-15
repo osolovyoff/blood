@@ -1,14 +1,23 @@
 import os
 import sys
 
+# BOOST_ROOT without boost boost_1_59_0
 boost_root = os.path.expandvars('$BOOST_ROOT')
+boost_dir_array = []
 
+for name in os.listdir(boost_root):
+    if name[:5] == 'boost':
+        full_folder_name = os.path.join(boost_root, name)
+        if os.path.isdir(full_folder_name):
+            boost_dir_array.append(full_folder_name)
+
+boost_root = max(boost_dir_array)
 
 link = 'static'      # static|shared
 runtime = 'static'   #
-threading = 'multi'  # single|multi
+threading = 'single'  # single|multi
 
-address_model = '64' # 32|64|32_64
+address_model = '32' # 32|64|32_64
 build_type = 'stage' # complete|stage
 toolset = 'msvc-12.0'
 

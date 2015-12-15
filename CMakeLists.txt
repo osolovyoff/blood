@@ -12,18 +12,18 @@ include(assemble/cmake/parse.cmake)
 include(assemble/cmake/submodule.cmake)
 include(assemble/cmake/configuration.cmake)
 
-set(project_name vbloodv)
+set(project_name sysreg)
 project(${project_name})
 # _________________________________________ Options
 
-option(ADDRESS_MODEL_64 "Build x64 platform"                              ON)
+option(ADDRESS_MODEL_64 "Build x64 platform"                              OFF)
 option(STORE            "Create Windows 8.1 or more; Store application"   OFF)
 option(BUILD_LIBRARY    "Switcher between library and executable"         OFF)
 option(RASPBERRY        "Raspbian is official supported Operating System" OFF)
 
 # _________________________________________ Use technology
 
-option(USE_BOOST   "" OFF)
+option(USE_BOOST   "" ON)
 option(USE_CURL    "" OFF)
 option(USE_OPENCV  "" OFF)
 option(USE_OPENSSL "" OFF)
@@ -31,20 +31,21 @@ option(USE_DIRECTX "" OFF)
 option(USE_OCULUS  "" OFF)
 
 if(USE_BOOST)
-	option(Boost_USE_STATIC_LIBS    "Set to ON to force the use of the static libraries. Default is OFF." ON)
-	option(Boost_USE_MULTITHREADED  "Set to OFF to use the non-multithreaded libraries ('mt' tag).  Default is ON." ON)  
-	option(Boost_USE_STATIC_RUNTIME "Set to ON or OFF to specify whether to use libraries linked statically to the C++ runtime ('s' tag).  Default is platform dependent." ON)
+	option(Boost_USE_STATIC_LIBS    "Set to ON to force the use of the static libraries."                                                  ON)
+	option(Boost_USE_MULTITHREADED  "Set to OFF to use the non-multithreaded libraries                                         ('mt' tag)" OFF)  
+	option(Boost_USE_STATIC_RUNTIME "Set to ON or OFF to specify whether to use libraries linked statically to the C++ runtime ('s' tag) " ON)
+	option(Boost_USE_DEBUG_RUNTIME  "Set to ON or OFF to specify whether to use libraries linked to the MS debug C++ runtime   ('g' tag) " OFF)
+
 	set(Boost_components
 		program_options
 		filesystem
 		date_time
 		regex
-		asio
 		#lockfree # only boost 1.59
 		#fusion
 		#spirit
 		system
-		thread
+		#thread
 		chrono
 	)
 endif()

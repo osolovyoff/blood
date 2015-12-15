@@ -1,6 +1,6 @@
-#include "../../../include/blood/sys/reg.hxx"
-#include <iostream>
-#include <blood/blood>
+#include "reg.hxx"
+#pragma comment(lib, "Advapi32.lib")
+
 
 #define HKEY_ERROR (( HKEY ) (ULONG_PTR)((LONG)0x80000013) )
 #define REG_ERROR -1
@@ -12,26 +12,36 @@ Reg::Reg()
 {
 }
 
-Reg::Reg(std::string path)
-: m_is_open(false)
+inline std::vector<std::string> split_string(std::string in, const char symbol)
 {
-    const auto v = blood::fn::text::split_string(path, '\\');
-    std::cout << "handle:" << v.front() << std::endl;
-
-    if (v.size() >= 3)
-    {
-        m_hkey_handle = convert_string_to_hkey(v.front());
-
-        for (int i = 1; i < v.size() - 1; ++i)
-            m_path += v[i] + '\\';
-        m_path = m_path.substr(0, m_path.size() - 1);
-
-        m_name = v[v.size() - 1];
-
-        std::cout << "path:" << m_path << std::endl;
-        std::cout << "name:" << m_name << std::endl;
-    }
+    std::vector<std::string> elements;
+    std::stringstream ss(in);
+    std::string item;
+    while (std::getline(ss, item, symbol))
+        elements.push_back(item);
+    return elements;
 }
+
+ Reg::Reg(std::string path)
+ : m_is_open(false)
+ {
+     const auto v = split_string(path, '\\');
+     std::cout << "handle:" << v.front() << std::endl;
+
+     if (v.size() >= 3)
+     {
+         m_hkey_handle = convert_string_to_hkey(v.front());
+
+         for (int i = 1; i < v.size() - 1; ++i)
+             m_path += v[i] + '\\';
+         m_path = m_path.substr(0, m_path.size() - 1);
+
+         m_name = v[v.size() - 1];
+
+         std::cout << "path:" << m_path << std::endl;
+         std::cout << "name:" << m_name << std::endl;
+     }
+ }
 
 Reg::~Reg()
 {
@@ -56,6 +66,7 @@ void Reg::open()
         }
         else
         {
+            m_is_open = false;
             std::cout << "error open" << std::endl;
         }
     }
@@ -203,25 +214,33 @@ int Reg::convert_string_to_type(std::string type_string)
     return REG_ERROR;
 }
 
-#include <winnt.h>
-
 std::string Reg::convert_bool_to_string(char* data, unsigned long size)
 {
     bool result;
-    memcpy_s(&result, sizeof(bool), data, sizeof(bool));
+    memcpy(&result, data, size);
     return (result == 0) ? "1" : "0";
 }
 
 std::string Reg::convert_dword_to_string(char* data, unsigned long size)
 {
     DWORD result;
-    memcpy_s(&result, size, data, size);
+    memcpy(&result, data, size);
     return std::to_string(result);
 }
 
 std::string Reg::convert_qword_to_string(char* data, unsigned long size)
 {
     QWORD result;
-    memcpy_s(&result, size, data, size);
+    memcpy(&result, data, size);
     return std::to_string(result);
+}
+
+std::vector<std::string> Reg::split_string(std::string in, const char symbol)
+{
+    std::vector<std::string> elements;
+    std::stringstream ss(in);
+    std::string item;
+    while (std::getline(ss, item, symbol))
+        elements.push_back(item);
+    return elements;
 }
