@@ -23,7 +23,7 @@ option(RASPBERRY        "Raspbian is official supported Operating System" OFF)
 
 # _________________________________________ Use technology
 
-option(USE_BOOST   "" ON)
+option(USE_BOOST   "" OFF)
 option(USE_CURL    "" OFF)
 option(USE_OPENCV  "" OFF)
 option(USE_OPENSSL "" OFF)
