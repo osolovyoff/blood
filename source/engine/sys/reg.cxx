@@ -1,246 +1,255 @@
 #include "reg.hxx"
-#pragma comment(lib, "Advapi32.lib")
 
+#if defined(UNICODE) || defined(_UNICODE)
+typedef std::wstringstream RegStringStream;
+#else
+typedef std::stringstream RegStringStream;
+#endif
 
 #define HKEY_ERROR (( HKEY ) (ULONG_PTR)((LONG)0x80000013) )
 #define REG_ERROR -1
+const RegSymbol folder_separator = TEXT('\\');
 typedef unsigned __int64 QWORD;
+const DWORD MAX_BUFFER_SIZE = 4096;
 
-Reg::Reg()
-: m_path(0)
-, m_is_open(false)
+inline std::vector<RegString> split_string(RegString in, const RegSymbol symbol)
 {
-}
-
-inline std::vector<std::string> split_string(std::string in, const char symbol)
-{
-    std::vector<std::string> elements;
-    std::stringstream ss(in);
-    std::string item;
+    std::vector<RegString> elements;
+    RegStringStream ss(in);
+    RegString item;
     while (std::getline(ss, item, symbol))
         elements.push_back(item);
     return elements;
 }
 
- Reg::Reg(std::string path)
+//____________________________________________________________________________
+// RegVariable
+
+RegVariable::RegVariable(HKEY* parent, RegString name, DWORD type)
+{
+    m_parent_key = parent;
+    m_name = name;
+	m_type = type;
+}
+
+RegString RegVariable::get_value() const
+{
+    const DWORD BUFFER_SIZE = 1024;
+    RegSymbol   data[BUFFER_SIZE];
+    unsigned long buf_size = BUFFER_SIZE;
+    const long is_success = RegQueryValueEx(*m_parent_key, m_name.c_str(), 0, 0, (LPBYTE)data, &buf_size);
+    if (m_type == REG_SZ)
+        return RegString(data);
+    if (m_type == REG_EXPAND_SZ)
+        return RegString(data);
+    if (m_type == REG_LINK)
+        return RegString(data);
+    if (m_type == REG_FULL_RESOURCE_DESCRIPTOR)
+        return RegString(data);
+    if (m_type == REG_BINARY)
+        return RegKey::convert_registry_data_to_string<bool>(data, buf_size);
+    if (m_type == REG_DWORD)
+        return RegKey::convert_registry_data_to_string<DWORD>(data, buf_size);
+    if (m_type == REG_DWORD_LITTLE_ENDIAN)
+        return RegKey::convert_registry_data_to_string<DWORD>(data, buf_size);
+    if (m_type == REG_DWORD_BIG_ENDIAN)
+        return RegKey::convert_registry_data_to_string<DWORD>(data, buf_size);
+    if (m_type == REG_QWORD)
+        return RegKey::convert_registry_data_to_string<QWORD>(data, buf_size);
+    if (m_type == REG_QWORD_LITTLE_ENDIAN)
+        return RegKey::convert_registry_data_to_string<QWORD>(data, buf_size);
+
+    return RegString();
+}
+
+RegString RegVariable::get_name() const
+{
+    return m_name;
+}
+
+std::ostream& operator<<(std::ostream& os, const RegVariable& rv)
+{
+    os << rv.m_name << TEXT(" | ") << rv.get_value();
+    return os;
+}
+
+//____________________________________________________________________________
+// RegKey
+
+ RegKey::RegKey(RegString path)
  : m_is_open(false)
+ , m_handle(NULL)
  {
-     const auto v = split_string(path, '\\');
-     std::cout << "handle:" << v.front() << std::endl;
+     if (folder_separator == *path.rbegin())
+         path = RegString(path.begin(), path.end() - 1);
 
-     if (v.size() >= 3)
-     {
-         m_hkey_handle = convert_string_to_hkey(v.front());
+     const std::vector<RegString> v = split_string(path, folder_separator);
+     if (v.empty())
+         return;
 
-         for (int i = 1; i < v.size() - 1; ++i)
-             m_path += v[i] + '\\';
-         m_path = m_path.substr(0, m_path.size() - 1);
+    if (v.size() == 1)
+    {
+        m_handle = convert_string_to_hkey(path);
+        m_hkey = m_handle;
+        m_is_open = true;
+    }
+    else
+    {
+        const RegString handle_string = v.front();
 
-         m_name = v[v.size() - 1];
+        m_handle = convert_string_to_hkey(handle_string);
+        m_path = path.substr(handle_string.size() + 1);
 
-         std::cout << "path:" << m_path << std::endl;
-         std::cout << "name:" << m_name << std::endl;
-     }
+        const long status = RegOpenKeyEx(m_handle, m_path.c_str(), 0, KEY_READ | KEY_WOW64_64KEY, &m_hkey);
+        m_is_open = (ERROR_SUCCESS == status);
+    }
  }
 
-Reg::~Reg()
-{
-    close();
-}
-
-
-void Reg::zero()
-{
-
-}
-
-void Reg::open()
-{
-    if (!m_is_open)
-    {
-        const long status = RegOpenKeyEx(m_hkey_handle, m_path.c_str(), 0, KEY_ALL_ACCESS | KEY_WOW64_64KEY, &m_hkey);
-        if (status == ERROR_SUCCESS)
-        {
-            m_is_open = true;
-            std::cout << "success open" << std::endl;
-        }
-        else
-        {
-            m_is_open = false;
-            std::cout << "error open" << std::endl;
-        }
-    }
-}
-
-void Reg::close()
+RegKey::~RegKey()
 {
     if (m_is_open)
     {
-        RegCloseKey(m_hkey_handle);
+        RegCloseKey(m_handle);
         m_is_open = false;
     }
 }
 
-void Reg::print()
+std::vector<RegString>& RegKey::get_subkeys()
 {
-    if (m_is_open)
-    {
-        const std::string hkey = convert_hkey_to_string(m_hkey_handle);
-        if (!hkey.empty())
-        {
-            std::cout << hkey << '\\' << m_path << '\\' << m_name << std::endl;
-        }
-    }
+	if (m_is_open)
+	{
+		DWORD i = 0;
+		while (true)
+		{
+            const DWORD size = MAX_BUFFER_SIZE;
+			RegSymbol keyname[size];
+            const auto result = RegEnumKey(m_hkey, i, keyname, size);
+			if (result == 0)
+			{
+				m_subkeys.emplace_back(keyname);
+				++i;
+			}
+			else
+				break;
+		}	
+	}
+	return m_subkeys;
 }
 
-void Reg::create()
+std::vector<RegVariable>& RegKey::get_variables()
 {
-
+	if (m_is_open)
+	{
+		int i = 0;
+		while (true)
+		{
+            RegSymbol keyname[MAX_BUFFER_SIZE];
+			DWORD size;
+			DWORD type;
+            BYTE data[MAX_BUFFER_SIZE];
+            const auto result = RegEnumValue(m_hkey, i, keyname, &size,/*lpReserved*/ NULL,/*lpType*/ &type,/*lpData*/ NULL,/*lpcbData*/ NULL);
+			if (result == ERROR_SUCCESS && is_correctly_type(type))
+			{ 
+                const auto result_data = RegQueryValueEx(m_hkey, keyname, NULL, &type, data, &size);
+                m_variables.emplace_back(&m_hkey, keyname, type);
+				++i;	
+				size = 32767;
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+    return m_variables;
 }
 
-void Reg::remove()
+HKEY* RegKey::get_hkey()
 {
-    if (m_is_open)
-    {
-        RegDeleteValue(m_hkey, m_name.c_str());
-        close();
-    }
+    return &m_hkey;
 }
 
-void Reg::set_value(std::string value, std::string type)
+RegString RegKey::get_path() const
 {
-    if (m_is_open)
-    {
-        m_type = convert_string_to_type(type);
-        if (m_type != REG_ERROR)
-        {
-            const long is_success = RegSetValueEx(m_hkey, m_name.c_str(), 0, m_type, (LPBYTE)value.c_str(), value.size());
-            if (is_success == ERROR_SUCCESS)
-            {
-                std::cout << "new value:" << value << std::endl;
-                m_is_open = true;
-            }
-        }
-    }
+    return convert_hkey_to_string(m_handle) + folder_separator +
+        ( m_path.empty()
+        ? m_path
+        : m_path + folder_separator);
 }
 
-std::string Reg::get_value(std::string type)
+void RegKey::operator=(RegString registry_key_string)
 {
-    char  data[255];
-    unsigned long buf_size = 255;
-    const long is_success = RegQueryValueEx(m_hkey, m_name.c_str(), 0, 0, (LPBYTE)data, &buf_size);
-
-    const int itype = convert_string_to_type(type);
-    if (itype == REG_SZ)
-        return std::string(data);
-    if (itype == REG_BINARY)
-        return convert_bool_to_string(data, buf_size);
-    if (itype == REG_DWORD)
-        return convert_dword_to_string(data, buf_size);
-    if (itype == REG_QWORD)
-        return convert_qword_to_string(data, buf_size);
-
-    return std::string();
+    *this = RegKey(registry_key_string);
 }
 
-void Reg::operator=(std::string registry_key_string)
-{
-    *this = Reg(registry_key_string);
-}
-
-void Reg::operator=(const Reg& reg)
+void RegKey::operator=(const RegKey& reg)
 {
     m_path = reg.m_path;
     m_is_open = reg.m_is_open;
 }
 
-std::string Reg::convert_hkey_to_string(HKEY hkey)
+std::ostream& operator<<(std::ostream& os, const RegKey& rk)
 {
-    if (HKEY_CLASSES_ROOT == hkey)
-        return "HKEY_CLASSES_ROOT";
-    else if (HKEY_CURRENT_USER == hkey)
-        return "HKEY_CURRENT_USER";
-    else if (HKEY_LOCAL_MACHINE == hkey)
-        return "HKEY_LOCAL_MACHINE";
-    else if (HKEY_USERS == hkey)
-        return "HKEY_USERS";
-    else if (HKEY_CURRENT_CONFIG == hkey)
-        return "HKEY_CURRENT_CONFIG";
-    else
-        return std::string();
+    os << rk.convert_hkey_to_string(rk.m_handle) << folder_separator << rk.m_path << folder_separator;
+    return os;
 }
 
-HKEY Reg::convert_string_to_hkey(std::string regpath)
+RegString RegKey::convert_hkey_to_string(const HKEY& hkey)
 {
-    if (regpath == "HKEY_CLASSES_ROOT")
+    if (HKEY_CLASSES_ROOT == hkey)
+        return TEXT("HKEY_CLASSES_ROOT");
+    else if (HKEY_CURRENT_USER == hkey)
+        return TEXT("HKEY_CURRENT_USER");
+    else if (HKEY_LOCAL_MACHINE == hkey)
+        return TEXT("HKEY_LOCAL_MACHINE");
+    else if (HKEY_USERS == hkey)
+        return TEXT("HKEY_USERS");
+    else if (HKEY_CURRENT_CONFIG == hkey)
+        return TEXT("HKEY_CURRENT_CONFIG");
+    else
+        return RegString();
+}
+
+HKEY RegKey::convert_string_to_hkey(const RegString& regpath)
+{
+    if (regpath == TEXT("HKEY_CLASSES_ROOT"))
         return HKEY_CLASSES_ROOT;
-    else if (regpath == "HKEY_CURRENT_USER")
+    else if (regpath == TEXT("HKEY_CURRENT_USER"))
         return HKEY_CURRENT_USER;
-    else if (regpath == "HKEY_LOCAL_MACHINE")
+    else if (regpath == TEXT("HKEY_LOCAL_MACHINE"))
         return HKEY_LOCAL_MACHINE;
-    else if (regpath == "HKEY_USERS")
+    else if (regpath == TEXT("HKEY_USERS"))
         return HKEY_USERS;
-    else if (regpath == "HKEY_CURRENT_CONFIG")
+    else if (regpath == TEXT("HKEY_CURRENT_CONFIG"))
         return HKEY_CURRENT_CONFIG;
     else
         return HKEY_ERROR;
 }
 
-int Reg::convert_string_to_type(std::string type_string)
-{
-    if (type_string == "REG_BINARY")
-        return REG_BINARY;
-    if (type_string == "REG_DWORD")
-        return REG_DWORD;
-    if (type_string == "REG_QWORD")
-        return REG_QWORD;
-    if (type_string == "REG_EXPAND_SZ")
-        return REG_EXPAND_SZ;
-    if (type_string == "REG_FULL_RESOURCE_DESCRIPTOR")
-        return REG_FULL_RESOURCE_DESCRIPTOR;
-    if (type_string == "REG_LINK")
-        return REG_LINK;
-    if (type_string == "REG_MULTI_SZ")
-        return REG_MULTI_SZ;
-    if (type_string == "REG_RESOURCE_LIST")
-        return REG_RESOURCE_LIST;
-    if (type_string == "REG_RESOURCE_REQUIREMENTS_LIST")
-        return REG_RESOURCE_REQUIREMENTS_LIST;
-    if (type_string == "REG_SZ")
-        return REG_SZ;
-    if (type_string == "REG_NONE")
-        return REG_NONE;
-
-    return REG_ERROR;
-}
-
-std::string Reg::convert_bool_to_string(char* data, unsigned long size)
+RegString RegKey::convert_bool_to_string(RegSymbol* data, unsigned long size)
 {
     bool result;
-    memcpy(&result, data, size);
-    return (result == 0) ? "1" : "0";
+    memcpy(&result, data, sizeof(bool));
+    return (result == 0) ? TEXT("1") : TEXT("0");
 }
 
-std::string Reg::convert_dword_to_string(char* data, unsigned long size)
+bool RegKey::is_correctly_type(const DWORD& type)
 {
-    DWORD result;
-    memcpy(&result, data, size);
-    return std::to_string(result);
-}
-
-std::string Reg::convert_qword_to_string(char* data, unsigned long size)
-{
-    QWORD result;
-    memcpy(&result, data, size);
-    return std::to_string(result);
-}
-
-std::vector<std::string> Reg::split_string(std::string in, const char symbol)
-{
-    std::vector<std::string> elements;
-    std::stringstream ss(in);
-    std::string item;
-    while (std::getline(ss, item, symbol))
-        elements.push_back(item);
-    return elements;
+    switch (type)
+    {
+    case REG_SZ:
+    case REG_BINARY:
+    case REG_DWORD:
+    case REG_DWORD_BIG_ENDIAN:
+    case REG_LINK:
+    case REG_EXPAND_SZ:
+    case REG_MULTI_SZ:
+    case REG_RESOURCE_LIST:
+    case REG_FULL_RESOURCE_DESCRIPTOR:
+    case REG_RESOURCE_REQUIREMENTS_LIST:
+    case REG_QWORD:
+        return true;
+    default:
+        return false;
+    }
 }
