@@ -72,7 +72,7 @@ parse_add_source_groups()
 
 # _________________________________________ Processing
 
-include_directories(${BLOOD_INCLUDES} ${BLOOD_ROOT}/include/)
+include_directories(${BLOOD_INCLUDE_DIR} ${BLOOD_ROOT}/include/ ${BLOOD_INCLUDES})
 link_directories(${BLOOD_LIBRARIES})
 
 add_library(blood STATIC ${BLOOD_SOURCES_FILES})
