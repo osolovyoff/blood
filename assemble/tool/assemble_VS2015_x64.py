@@ -3,7 +3,8 @@ import cmake
 import shutil
 
 os.system('cls' if os.name == 'nt' else 'clear')
-shutil.rmtree('../VS2013')
+if os.path.exists('../VS2015x64'):
+	shutil.rmtree('../VS2015x64')
 cmake.buildCmake(
     'VS2015x64',
     '../../',

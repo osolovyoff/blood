@@ -3,7 +3,8 @@ import cmake
 import shutil
 
 os.system('cls' if os.name == 'nt' else 'clear')
-shutil.rmtree('../VS2013')
+if os.path.exists('../UnixMake'):
+	shutil.rmtree('../UnixMake')
 cmake.buildCmake(
     'UnixMake',
     '../../',
