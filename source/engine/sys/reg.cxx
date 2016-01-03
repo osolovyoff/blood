@@ -1,5 +1,7 @@
 #include "reg.hxx"
 
+#if defined(WIN32)
+
 #if defined(UNICODE) || defined(_UNICODE)
 typedef std::wstringstream RegStringStream;
 #else
@@ -253,3 +255,5 @@ bool RegKey::is_correctly_type(const DWORD& type)
         return false;
     }
 }
+
+#endif // WIN32

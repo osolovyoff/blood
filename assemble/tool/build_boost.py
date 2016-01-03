@@ -19,9 +19,7 @@ threading = 'single'  # single|multi
 
 address_model = '32' # 32|64|32_64
 build_type = 'stage' # complete|stage
-toolset = 'msvc-12.0'
-
-
+toolset = 'mingw' # acc | borland | como | darwin | gcc | hp_cxx | intel | msvc | sun | vacpp | mingw
 
 install_directory = boost_root # You can will set your value !
 
@@ -32,8 +30,8 @@ if boost_root != "":
     boost_bootstrap = os.path.join(boost_root, 'bootstrap.bat')
 
     if os.path.exists(boost_bootstrap):
-        if not os.path.exists(boost_installer):
-            os.system(boost_bootstrap)
+    	if not os.path.exists(boost_installer):
+        	os.system(boost_bootstrap)
 
         if os.path.exists(boost_installer):
             os.system("%s debug release toolset=%s address-model=%s link=%s threading=%s runtime-link=%s --build_type=%s install --prefix=%s"

@@ -1,4 +1,5 @@
 #pragma once
+#if defined(WIN32)
 #ifndef blood_register_h__
 #define blood_register_h__
 
@@ -88,3 +89,4 @@ public: // static
 };
 
 #endif//blood_register_h__
+#endif// WIN32

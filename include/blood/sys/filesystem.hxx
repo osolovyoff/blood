@@ -5,7 +5,7 @@
 #include <filesystem>
 #endif // WIN32 && MSVS
 
-#if defined(BLOOD_UNIX) && defined(USE_BOOST)
+#if defined(UNIX) && defined(USE_BOOST)
 #include <boost/filesystem.hpp>
 #endif // UNIX && USE_BOOST
 
