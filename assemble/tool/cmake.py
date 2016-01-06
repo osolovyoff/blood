@@ -47,7 +47,8 @@ def buildCmake(
         cmake_file,
         projects
 ):
-    tool_name = getFullNameByAcronym(tool)
+    #tool_name = getFullNameByAcronym(tool)
+    tool_name = tool
     build_project = os.path.join(projects, tool)
 
     # project will be delete

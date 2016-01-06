@@ -19,7 +19,6 @@ project(${project_name})
 option(ADDRESS_MODEL_64 "Build x64 platform"                              OFF)
 option(STORE            "Create Windows 8.1 or more; Store application"   OFF)
 option(BUILD_LIBRARY    "Switcher between library and executable"         OFF)
-option(RASPBERRY        "Raspbian is official supported Operating System" OFF)
 
 # _________________________________________ Use technology
 
@@ -32,7 +31,7 @@ option(USE_OCULUS  "" OFF)
 
 if(USE_BOOST)
 	option(Boost_USE_STATIC_LIBS    "Set to ON to force the use of the static libraries."                                                  ON)
-	option(Boost_USE_MULTITHREADED  "Set to OFF to use the non-multithreaded libraries                                         ('mt' tag)" OFF)  
+	option(Boost_USE_MULTITHREADED  "Set to OFF to use the non-multithreaded libraries                                         ('mt' tag)" ON)  
 	option(Boost_USE_STATIC_RUNTIME "Set to ON or OFF to specify whether to use libraries linked statically to the C++ runtime ('s' tag) " ON)
 	option(Boost_USE_DEBUG_RUNTIME  "Set to ON or OFF to specify whether to use libraries linked to the MS debug C++ runtime   ('g' tag) " OFF)
 
