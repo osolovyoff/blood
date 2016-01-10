@@ -10,8 +10,8 @@ tools.append("Unix Makefiles")
 tools.append("MinGW Makefiles")
 tools.append("Visual Studio 12 2013")
 tools.append("Visual Studio 12 2013 Win64")
-tools.append("Visual Studio 12 2015")
-tools.append("Visual Studio 12 2015 Win64")
+tools.append("Visual Studio 14 2015")
+tools.append("Visual Studio 14 2015 Win64")
 tools.append("CodeBlocks - Unix Makefiles")
 
 is_success = False
@@ -24,6 +24,7 @@ while is_success == False:
 
 	print
 	n = input("Enter the tool number:")
+	n = int(n)
 	if (n > 0) and (n < len(tools)):
 		is_success = True
 
@@ -37,3 +38,4 @@ cmake.buildCmake(
 	'../../',
 	'../../assemble/'
 )
+input("Press Enter for continue")
