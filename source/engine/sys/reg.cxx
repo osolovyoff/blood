@@ -11,7 +11,7 @@ typedef std::stringstream RegStringStream;
 #define HKEY_ERROR (( HKEY ) (ULONG_PTR)((LONG)0x80000013) )
 #define REG_ERROR -1
 const RegSymbol folder_separator = TEXT('\\');
-typedef unsigned __int64 QWORD;
+typedef unsigned __int64 QWORD;  // Custom declaration of a standart 'QWORD' type. The declaration from system header files should be used instead.
 const DWORD MAX_BUFFER_SIZE = 4096;
 
 inline std::vector<RegString> split_string(RegString in, const RegSymbol symbol)

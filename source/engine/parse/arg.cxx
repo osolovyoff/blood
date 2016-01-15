@@ -67,12 +67,12 @@ namespace blood { namespace parse {
 
 CommandLineParser::CommandLineParser()
 {
+    // Not all members of a class are initialized inside the constructor. Consider inspecting: m_use_help, m_use_block
     m_use_block = false;
 }
 
 CommandLineParser::CommandLineParser(int _count, char* _array[])
 {
-    CommandLineParser();
     m_path = _array[0];
     for (int i = 1; i < _count; ++i)
     {

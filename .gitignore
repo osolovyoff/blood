@@ -12,11 +12,9 @@ extern/opencv/samples/
 assemble/tool/__pycache__/
 assemble/tool/*.pyc
 #__________________________________________PROJECT
-assemble/VS2015ARM/
-assemble/VS2015x64/
-assemble/VS2015/
-assemble/VS2013x64/
-assemble/VS2013/
+assemble/Unix Makefiles/
+assemble/Visual Studio 12 2013/
+assemble/Visual Studio 14 2015/
 assemble/CodeBlockUnixMake/
 assemble/UnixMake/
 #*__pycache__*

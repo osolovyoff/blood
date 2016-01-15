@@ -22,6 +22,7 @@ int getMenuNumber()
 Menu::Menu(int _start_condition, const string& _condition_name /* = "" */)
 : m_condition(_start_condition)
 , m_root_condition_name(_condition_name)
+, m_is_working(true)
 {}
 
 void Menu::run()

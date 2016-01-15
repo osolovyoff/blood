@@ -53,7 +53,7 @@ public:
 	std::vector<RegVariable>&  get_variables();
     HKEY*                      get_hkey();
 
-    void operator= (RegString hkey_string);
+    void operator= (RegString hkey_string);  // The RegKey class implements the '=' operator, but lacks a copy constructor. It is dangerous to use such a class
     void operator= (const RegKey& reg);
     friend std::ostream& operator<<(std::ostream& os, const RegKey& rk);
 
