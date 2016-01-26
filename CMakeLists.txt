@@ -12,7 +12,7 @@ include(assemble/cmake/parse.cmake)
 include(assemble/cmake/submodule.cmake)
 include(assemble/cmake/configuration.cmake)
 
-set(project_name sysreg)
+set(project_name quaternion)
 project(${project_name})
 # _________________________________________ Options
 

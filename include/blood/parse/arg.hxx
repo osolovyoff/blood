@@ -28,7 +28,7 @@ public:
     void setTitle(String);
     void setData(void*);
 
-    Argument& operator=(const Argument& _r);
+    Argument& operator=(const Argument& _r); // The Argument class implements the = operator, but lacks a copy constructor. It is dangerous to use such a class
 
 private:
     String m_name;

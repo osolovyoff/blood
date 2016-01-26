@@ -29,7 +29,7 @@ int blood::fn::input::get_menu_number()
 bool blood::fn::input::get_yes_no()
 {
     const auto key_code = blood::fn::input::getch();
-    return (key_code == 121 || key_code == 173) ? true : false;
+    return (key_code == 121 || key_code == 173) ? true : false; // Expression 'key_code == 173' is always false. The value range of char type -128, 127
 }
 
 int blood::fn::input::get_number()
