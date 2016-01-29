@@ -1,7 +1,5 @@
 #include "reg.hxx"
 
-#if defined(WIN32)
-
 #if defined(UNICODE) || defined(_UNICODE)
 typedef std::wstringstream RegStringStream;
 #else
@@ -11,7 +9,7 @@ typedef std::stringstream RegStringStream;
 #define HKEY_ERROR (( HKEY ) (ULONG_PTR)((LONG)0x80000013) )
 #define REG_ERROR -1
 const RegSymbol folder_separator = TEXT('\\');
-typedef unsigned __int64 QWORD;  // Custom declaration of a standart 'QWORD' type. The declaration from system header files should be used instead.
+typedef unsigned __int64 QWORD;
 const DWORD MAX_BUFFER_SIZE = 4096;
 
 inline std::vector<RegString> split_string(RegString in, const RegSymbol symbol)
@@ -38,7 +36,8 @@ RegString RegVariable::get_value() const
 {
     const DWORD BUFFER_SIZE = 1024;
     RegSymbol   data[BUFFER_SIZE];
-    unsigned long buf_size = BUFFER_SIZE;
+    unsigned long buf_size = BUFFER_SIZE+1;
+    /// converting any type to registry string
     const long is_success = RegQueryValueEx(*m_parent_key, m_name.c_str(), 0, 0, (LPBYTE)data, &buf_size);
     if (m_type == REG_SZ)
         return RegString(data);
@@ -69,9 +68,11 @@ RegString RegVariable::get_name() const
     return m_name;
 }
 
+/// override operator<< for streaming
 std::ostream& operator<<(std::ostream& os, const RegVariable& rv)
 {
-    os << rv.m_name << TEXT(" | ") << rv.get_value();
+    /// TEXT is a define for wchar or char symbol convertion. Dependencies from UNICODE macros.
+    os << rv.m_name << TEXT("|") << rv.get_value();
     return os;
 }
 
@@ -140,29 +141,28 @@ std::vector<RegString>& RegKey::get_subkeys()
 
 std::vector<RegVariable>& RegKey::get_variables()
 {
-	if (m_is_open)
-	{
-		int i = 0;
-		while (true)
-		{
+    if (m_is_open)
+    {
+        DWORD values_count = NULL; 
+        DWORD max_name_len = NULL; 
+        DWORD max_value_data = NULL;
+        RegQueryInfoKeyW(m_hkey, NULL, NULL, NULL, NULL, NULL, NULL, &values_count, &max_name_len, &max_value_data, NULL, NULL);
+        // get storage values count use by hkey
+        for (DWORD i = 0; i < values_count; i++)
+        {
+            TCHAR buf[1024];
+            DWORD bufLen = 1024;
+            DWORD len = max_name_len + 1;
+            DWORD type = NULL;
+
             RegSymbol keyname[MAX_BUFFER_SIZE];
-			DWORD size;
-			DWORD type;
-            BYTE data[MAX_BUFFER_SIZE];
-            const auto result = RegEnumValue(m_hkey, i, keyname, &size,/*lpReserved*/ NULL,/*lpType*/ &type,/*lpData*/ NULL,/*lpcbData*/ NULL);
-			if (result == ERROR_SUCCESS && is_correctly_type(type))
-			{ 
-                const auto result_data = RegQueryValueEx(m_hkey, keyname, NULL, &type, data, &size);
+            const DWORD result = RegEnumValue(m_hkey, i, keyname, &len, 0, &type, (LPBYTE)buf, &bufLen);
+            if (result == ERROR_SUCCESS && is_correctly_type(type))
+            {
                 m_variables.emplace_back(&m_hkey, keyname, type);
-				++i;	
-				size = 32767;
-			}
-			else
-			{
-				break;
-			}
-		}
-	}
+            }
+        }
+    }
     return m_variables;
 }
 
@@ -196,6 +196,7 @@ std::ostream& operator<<(std::ostream& os, const RegKey& rk)
     return os;
 }
 
+// conversion constant key to a string value corresponding to the key
 RegString RegKey::convert_hkey_to_string(const HKEY& hkey)
 {
     if (HKEY_CLASSES_ROOT == hkey)
@@ -212,6 +213,7 @@ RegString RegKey::convert_hkey_to_string(const HKEY& hkey)
         return RegString();
 }
 
+// conversion constant string to a key value corresponding to the selected string
 HKEY RegKey::convert_string_to_hkey(const RegString& regpath)
 {
     if (regpath == TEXT("HKEY_CLASSES_ROOT"))
@@ -228,6 +230,7 @@ HKEY RegKey::convert_string_to_hkey(const RegString& regpath)
         return HKEY_ERROR;
 }
 
+// conversion boolean value to a string
 RegString RegKey::convert_bool_to_string(RegSymbol* data, unsigned long size)
 {
     bool result;
@@ -237,6 +240,7 @@ RegString RegKey::convert_bool_to_string(RegSymbol* data, unsigned long size)
 
 bool RegKey::is_correctly_type(const DWORD& type)
 {
+    // check type of a system registry
     switch (type)
     {
     case REG_SZ:
@@ -255,5 +259,3 @@ bool RegKey::is_correctly_type(const DWORD& type)
         return false;
     }
 }
-
-#endif // WIN32
