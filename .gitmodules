@@ -1,0 +1,9 @@
+[submodule "extern/curl"]
+	path = extern/curl
+	url = https://github.com/bagder/curl
+[submodule "extern/openssl"]
+	path = extern/openssl
+	url = https://github.com/openssl/openssl
+[submodule "extern/jsoncpp"]
+	path = extern/jsoncpp
+	url = https://github.com/open-source-parsers/jsoncpp.git

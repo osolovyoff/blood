@@ -1,0 +1,45 @@
+#pragma once
+<<<<<<< HEAD
+#ifndef blood_net_mask_hxx_
+#define blood_net_mask_hxx_
+
+=======
+>>>>>>> 0fa604243372612f41bfd5da1e92d3dcedc3eb29
+#include <string>
+#include <map>
+
+namespace blood { namespace net {
+
+typedef unsigned char byte;
+typedef std::string string;
+
+class Mask
+{
+public:
+    Mask();
+    Mask(byte);
+    Mask(string);
+
+    string get_ip() const;
+    byte   get_value() const;
+    bool   is_empty() const;
+
+public: // convertation
+    static string convert(byte);
+    static byte   convert(string);
+
+private:
+    byte m_data;
+
+private:
+    static const std::map<byte, string> bit_to_mask_table;
+    static const std::map<string, byte> mask_to_bit_table;
+};
+
+<<<<<<< HEAD
+}} // end blood::net
+
+#endif // blood_net_mask_hxx_
+=======
+}} // end blood::net
+>>>>>>> 0fa604243372612f41bfd5da1e92d3dcedc3eb29

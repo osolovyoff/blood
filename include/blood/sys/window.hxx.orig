@@ -1,0 +1,35 @@
+<<<<<<< HEAD
+//#if defined(BLOOD_32) && defined(BLOOD_VS)
+//#pragma once
+//namespace blood { sys {
+//
+//class Window
+//{
+//public:
+//	Window();
+//	~Window();
+//
+//private:
+//};
+//
+//}} // end blood::sys
+//
+//#endif // end USE_WINDOW
+=======
+#if defined(BLOOD_32) && defined(BLOOD_VS)
+#pragma once
+namespace blood { sys {
+
+class Window
+{
+public:
+	Window();
+	~Window();
+
+private:
+};
+
+}} // end blood::sys
+
+#endif // end USE_WINDOW
+>>>>>>> 0fa604243372612f41bfd5da1e92d3dcedc3eb29

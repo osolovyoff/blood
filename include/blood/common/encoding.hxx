@@ -14,10 +14,6 @@ namespace blood { namespace fn { namespace text {
     std::vector<std::string>  split_string(std::string in, const char symbol);
     std::vector<std::wstring> split_wstring(std::wstring in, const wchar_t symbol);
 
-    std::pair<std::string,std::string>    split_string_to_two_part(std::string in, const char symbol);
-    std::pair<std::wstring, std::wstring> split_string_to_two_part(std::wstring in, const wchar_t symbol);
-
-
 	std::string               string_format(const std::string format, ...);
 
     bool is_number(std::string in);

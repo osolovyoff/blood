@@ -1,0 +1,24 @@
+<<<<<<< HEAD
+#include "../../../include/blood/sys/sysinfo_nix.hxx"
+
+#if defined(UNIX)
+#include <unistd.h>
+#include <string>
+=======
+#if defined(BLOOD_UNIX)
+#include "common.hxx"
+#include <unistd.h>
+>>>>>>> 0fa604243372612f41bfd5da1e92d3dcedc3eb29
+
+std::string SystemInfoNix::getCurrPath()
+{
+    char path[256];
+    getcwd(path, sizeof(path));
+    return std::string(path);
+}
+
+<<<<<<< HEAD
+#endif // UNIX
+=======
+#endif
+>>>>>>> 0fa604243372612f41bfd5da1e92d3dcedc3eb29

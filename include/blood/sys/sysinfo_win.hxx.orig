@@ -1,0 +1,27 @@
+#include <string>
+
+class SystemInfoWin
+{
+<<<<<<< HEAD
+#if defined(WIN32) || defined(MSVS) 
+public: 
+=======
+#if defined(BLOOD_32) || defined(BLOOD_VS) 
+public:
+>>>>>>> 0fa604243372612f41bfd5da1e92d3dcedc3eb29
+    static std::string getUserName();
+    static std::string getUserPath();
+    static std::string getAppPath();
+    static std::string getLocalPath();
+    static std::string getTempPath();
+    static std::string getCurrPath();
+
+    static unsigned long getHardDriveSerialNumber();
+
+    static std::string getUniqueId();
+    static std::string getMachineName();
+
+private:
+    static const unsigned int ms_max_path = 255;
+#endif
+};

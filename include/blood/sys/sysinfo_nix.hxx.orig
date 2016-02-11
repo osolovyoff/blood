@@ -1,0 +1,25 @@
+<<<<<<< HEAD
+#pragma once
+#ifndef blood_sys_sysinfo_nix_hxx_
+#define blood_sys_sysinfo_nix_hxx_
+
+#include <string>
+
+class SystemInfoNix
+{
+public:
+    static std::string getCurrPath();
+};
+
+#endif//blood_sys_sysinfo_nix_hxx_
+=======
+
+class SystemInfoNix
+{
+#ifdef ENGINE_NIX
+public:
+    static std::string getCurrPath();
+
+#endif
+};
+>>>>>>> 0fa604243372612f41bfd5da1e92d3dcedc3eb29

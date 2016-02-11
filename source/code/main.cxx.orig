@@ -1,0 +1,20 @@
+<<<<<<< HEAD
+#include "quaternion.hxx"
+
+int main()
+{
+  Quaternion q;
+  q = { 1.0f, 2.0f, 3.0f, 4.0f };
+
+  std::cout << q << std::endl;
+  std::cout << q.to_string() << std::endl;
+  return 0;
+=======
+#include <iostream>
+int main()
+{
+    std::cout << "hello world ! " << std::endl;
+    std::cin.get();
+	return 0;
+>>>>>>> 0fa604243372612f41bfd5da1e92d3dcedc3eb29
+}

@@ -1,0 +1,21 @@
+#pragma once
+<<<<<<< HEAD
+#ifndef blood_sys_sysinfo_hxx_
+#define blood_sys_sysinfo_hxx_
+=======
+>>>>>>> 0fa604243372612f41bfd5da1e92d3dcedc3eb29
+
+#include "../../../include/blood/sys/sysinfo_win.hxx"
+#include "../../../include/blood/sys/sysinfo_nix.hxx"
+
+class SystemInfo: public SystemInfoWin, public SystemInfoNix
+{
+public:
+    static unsigned int getHardwareConcurrency();
+    static std::string  getCurrentPath();
+};
+<<<<<<< HEAD
+
+#endif//blood_sys_sysinfo_hxx_
+=======
+>>>>>>> 0fa604243372612f41bfd5da1e92d3dcedc3eb29

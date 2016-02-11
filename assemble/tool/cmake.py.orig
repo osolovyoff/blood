@@ -1,0 +1,109 @@
+<<<<<<< HEAD
+'''
+Usage:
+	buildCmake( project_acronym, main_cmake_file, out_projects_folder )
+
+Project acronym:
+	VS2013              -> 'Visual Studio 12 2013' project
+	VS2013x64           -> 'Visual Studio 12 2013 Win64' project
+	VS2015              -> 'Visual Studio 12 2015' project
+	VS2015x64           -> 'Visual Studio 14 2015 Win64' project
+	VS2015ARM           -> 'Visual Studio 14 2015 ARM' project
+	UnixMake            -> 'Unix Makefiles' project
+	MinGW               -> 'MinGW Makefiles' project
+	CodeBlockMinGW      -> 'CodeBlocks - MinGw Makefiles' project
+	CodeBlockNMake      -> 'CodeBlocks - NMake Makefiles' project
+	CodeBlockNinja      -> 'CodeBlocks - Ninja' project
+	CodeBlockUnixMake   -> 'CodeBlocks - Unix Makefiles' project
+
+Main CMake file:
+	"../../"            -> for this project
+
+Out projects folder:
+	"../"               -> to your taste
+	"../projects/"
+	"../../assemble/"
+'''
+
+import os
+import shutil
+
+def getFullNameByAcronym(acronym):
+    return {
+        'VS2013': 'Visual Studio 12 2013',
+        'VS2013x64': 'Visual Studio 12 2013 Win64',
+        'VS2015':'Visual Studio 12 2015',
+        'VS2015x64':'Visual Studio 14 2015 Win64',
+        'VS2015ARM':'Visual Studio 14 2015 ARM',
+        'UnixMake': 'Unix Makefiles',
+        'MinGW': 'MinGW Makefiles',
+        'CodeBlockMinGW': 'CodeBlocks - MinGw Makefiles',
+        'CodeBlockNMake': 'CodeBlocks - NMake Makefiles',
+        'CodeBlockNinja': 'CodeBlocks - Ninja',
+        'CodeBlockUnixMake': 'CodeBlocks - Unix Makefiles'
+    }[acronym]
+
+def buildCmake(
+        tool,
+        cmake_file,
+        projects
+):
+    #tool_name = getFullNameByAcronym(tool)
+    tool_name = tool
+    build_project = os.path.join(projects, tool)
+
+    # project will be delete
+    if os.path.exists(build_project):
+        if os.path.isdir(build_project):
+            shutil.rmtree(build_project)
+
+    # project will be create
+    if not os.path.exists(build_project):
+        os.makedirs(build_project)
+
+    os.chdir(build_project)
+
+    command = "cmake"
+    command += " -G \"%s\"" % tool_name
+    command += " \"%s\"" % cmake_file
+    print(command)
+    os.system(command)
+
+
+def compile(tool, dir):
+    if (tool == 'UnixMake' or tool == 'Unix Makefiles'):
+        os.chdir(dir)
+        os.system('make')
+
+
+def clear(out):
+    os.chdir(out)
+
+    paths = [
+        'cmake_install.cmake',
+        'CMakeCache.txt',
+        'CMakeFiles',
+        'Makefile',
+        'tool.dir',
+        'Debug',
+        '__pycache__',
+        'ALL_BUILD.vcxproj',
+        'ALL_BUILD.vcxproj.filters',
+        'tool.sln',
+        'tool.vcxproj',
+        'tool.vcxproj.filters',
+        'ZERO_CHECK.vcxproj',
+        'ZERO_CHECK.vcxproj.filters'
+    ]
+
+    for path in paths:
+        if os.path.exists(path):
+            if os.path.isdir(path):
+                shutil.rmtree(path)
+            else:
+                os.remove(path)
+
+def deleteFolder(path):
+    if os.path.exists(path):
+        if os.path.isdir(path):
+                shutil.rmtree(path)

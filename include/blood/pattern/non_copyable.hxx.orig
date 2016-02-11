@@ -1,0 +1,26 @@
+<<<<<<< HEAD
+#pragma once
+#ifndef blood_pattern_non_copyable_hxx_
+#define blood_pattern_non_copyable_hxx_
+
+=======
+>>>>>>> 0fa604243372612f41bfd5da1e92d3dcedc3eb29
+namespace blood { namespace pattern { 
+
+class NonCopyable
+{
+protected:
+    NonCopyable(){}
+
+private:
+    NonCopyable(const NonCopyable&) = delete;
+    NonCopyable& operator=(const NonCopyable&) = delete;
+};
+
+<<<<<<< HEAD
+}} // blood::pattern
+
+#endif // blood_pattern_non_copyable_hxx_
+=======
+}} // blood::pattern
+>>>>>>> 0fa604243372612f41bfd5da1e92d3dcedc3eb29

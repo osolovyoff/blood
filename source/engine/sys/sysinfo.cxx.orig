@@ -1,0 +1,21 @@
+#include "../../../include/blood/sys/sysinfo.hxx"
+#include <thread>
+
+unsigned int SystemInfo::getHardwareConcurrency()
+{
+    return std::thread::hardware_concurrency();
+}
+
+std::string SystemInfo::getCurrentPath()
+{
+<<<<<<< HEAD
+#if defined(WIN32) || defined(MSVS)
+=======
+#if defined(BLOOD_VS) || defined(BLOOD_32)
+>>>>>>> 0fa604243372612f41bfd5da1e92d3dcedc3eb29
+    return SystemInfoWin::getCurrPath();
+#else
+    return SystemInfoNix::getCurrPath();
+#endif
+}
+

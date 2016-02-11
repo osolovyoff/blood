@@ -1,0 +1,28 @@
+#__________________________________________BUILD
+assemble/build/
+
+#__________________________________________EXTERN
+extern/openssl/build/
+extern/openssl/tmp32.dbg/
+extern/vtk/
+extern/opencv/3rdparty/ippicv/downloads/
+extern/opencv/3rdparty/ippicv/unpack/
+extern/opencv/samples/
+#__________________________________________TOOL
+assemble/tool/__pycache__/
+assemble/tool/*.pyc
+#__________________________________________PROJECT
+assemble/Unix Makefiles/
+assemble/Visual Studio 12 2013/
+assemble/Visual Studio 14 2015/
+assemble/CodeBlockUnixMake/
+assemble/UnixMake/
+#*__pycache__*
+
+
+
+
+#__________________________________________FILES
+*.sdf
+*.opensdf
+*.suo
